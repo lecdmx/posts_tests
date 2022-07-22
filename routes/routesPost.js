@@ -17,6 +17,7 @@ router.post('/posts',
     [
         check('post').not().isEmpty().withMessage('post is a required parameter'),
         check('id_user').not().isEmpty().withMessage('id_rol is a required parameter'),
+        check('id_user').isNumeric().withMessage('id_user must be a number'),
     ], postsController.store);
 
 router.get('/posts/:id', postsController.show);
@@ -24,7 +25,9 @@ router.get('/posts/:id', postsController.show);
 router.post('/deletepost',
     [
         check('id_user').not().isEmpty().withMessage('id_user is a required parameter'),
+        check('id_user').isNumeric().withMessage('id_user must be a number'),
         check('id_post').not().isEmpty().withMessage('id_post is a required parameter'),
+        check('id_post').isNumeric().withMessage('id_post must be a number'),
     ], postsController.delete);
 
 
@@ -32,7 +35,9 @@ router.post('/updatepost',
     [
         check('post').not().isEmpty().withMessage('post is a required parameter'),
         check('id_user').not().isEmpty().withMessage('id_user is a required parameter'),
+        check('id_user').isNumeric().withMessage('id_user must be a number'),
         check('id_post').not().isEmpty().withMessage('id_post is a required parameter'),
+        check('id_post').isNumeric().withMessage('id_post must be a number'),
     ], postsController.update);
 
 

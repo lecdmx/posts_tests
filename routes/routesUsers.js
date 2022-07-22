@@ -9,8 +9,9 @@ router.post('/users',
     [
         check('name').not().isEmpty().withMessage('name is a required parameter'),
         check('email').not().isEmpty().withMessage('email is a required parameter'),
-        check('password').not().isEmpty().withMessage('password is a required parameter'),
+        check('email').isEmail().withMessage('email must be a valid email address'),
         check('id_rol').not().isEmpty().withMessage('id_rol is a required parameter'),
+        check('id_rol').isNumeric().withMessage('id_post must be a number')
     ],
     usersController.store);
 
@@ -20,7 +21,9 @@ router.put('/users',
     [
         check('name').not().isEmpty().withMessage('name is a required parameter'),
         check('email').not().isEmpty().withMessage('email is a required parameter'),
+        check('email').isEmail().withMessage('email must be a valid email address'),
         check('id_rol').not().isEmpty().withMessage('id_rol is a required parameter'),
+        check('id_rol').isNumeric().withMessage('id_post must be a number')
     ],
     usersController.update);
 

@@ -142,36 +142,41 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
     try {
-        const { params } = req
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            throw ({ message: errors.array() });
+
+
+        const { body } = req
 
         await db.transaction(async (t) => {
 
-            //  delete comments
+            //  delete comments 
             await db.query(` DELETE FROM challenge.comment
-                                WHERE id_post IN
-                                ( SELECT id_post FROM challenge.post WHERE id_user = :id)
+                                WHERE id_comment_parent = :id 
                 `,
                 {
                     type: db.QueryTypes.DELETE,
                     replacements: {
-                        id: params.id
+                        id: body.id_comment
                     }
                 }, { transaction: t });
 
 
-            await db.query(`DELETE FROM challenge.comment WHERE id_comment = :id_comment`, {
+            await db.query(`DELETE FROM challenge.comment WHERE id_comment = :id`, {
                 type: db.QueryTypes.DELETE,
                 replacements: {
-                    id_comment: params.id
+                    id: body.id_comment
                 }
-            })
+            }, { transaction: t })
 
         });
 
 
         res.json({
             "msgStatus": 'success',
-            "message": { "deleted_id": params.id },
+            "message": { "deleted_id": body.id },
             "error_message": {},
             "status": true
         });
