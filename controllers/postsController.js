@@ -171,8 +171,15 @@ exports.delete = async (req, res) => {
 
         const { body } = req;
 
-        let generatedPostId = 0;
         await db.transaction(async (t) => {
+
+            await db.query(`DELETE FROM challenge.comment WHERE id_post = :id`, {
+                type: db.QueryTypes.DELETE,
+                replacements: {
+                    id: body.id_post
+                }
+            }, { transaction: t })
+
 
             await db.query(`DELETE FROM challenge.post WHERE id_post = :id`,
                 {
@@ -191,7 +198,7 @@ exports.delete = async (req, res) => {
                     replacements: {
                         id_user: body.id_user,
                         id_post: body.id_post,
-                        content: `User ${body.id_user} deleted Post ${generatedPostId}`
+                        content: `User ${body.id_user} deleted Post ${body.id_post}`
                     }
                 }, { transaction: t });
 
@@ -232,7 +239,6 @@ exports.update = async (req, res) => {
 
         const { body } = req;
 
-        let generatedPostId = 0;
         await db.transaction(async (t) => {
 
             await db.query(`UPDATE challenge.post SET post = :post WHERE id_post = :id`,
@@ -253,7 +259,7 @@ exports.update = async (req, res) => {
                     replacements: {
                         id_user: body.id_user,
                         id_post: body.id_post,
-                        content: `User ${body.id_user} deleted Post ${generatedPostId}`
+                        content: `User ${body.id_user} updated Post ${body.id_post}`
                     }
                 }, { transaction: t });
 
