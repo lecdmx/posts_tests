@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const routesUsers = require('./routes/routesUsers');
 const routesPost = require('./routes/routesPost');
+const routersComments = require('./routes/routersComments');
+const routesLogs = require('./routes/routesLogs');
 const helmet = require('helmet');
 const cors = require('cors');
 
@@ -16,6 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(routesUsers);
 app.use(routesPost);
+app.use(routersComments);
+app.use(routesLogs);
 
 app.listen(PORT, () => {
     console.log(`App listen port ${PORT}`)

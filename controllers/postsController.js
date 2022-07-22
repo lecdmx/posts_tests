@@ -4,12 +4,58 @@ const { validationResult } = require("express-validator");
 exports.index = async (req, res) => {
 
     try {
-        const response = await db.query(`SELECT id_post,  
-                                            creation_date, to_char(creation_date, 'DD/MM/YYYY') as creation_date_formated
+        const response = await db.query(`SELECT id_post, creation_date, to_char(creation_date, 'DD/MM/YYYY') as creation_date_formated,
+                                            DATE_PART('day', current_timestamp-creation_date) as days,
+                                            CASE WHEN 
+                                                DATE_PART('day', current_timestamp-creation_date) > 7
+                                                THEN 'ALERT_MORE_7_DAYS' 
+                                                ELSE '' 
+                                            END as alert
                                             FROM challenge.post 
+                                            ORDER BY creation_date
                                         `,
             {
                 type: db.QueryTypes.SELECT
+            })
+
+        res.json(response);
+
+    }
+    catch (error) {
+        console.log(error);
+        res.json({ "Error": error });
+    }
+
+};
+
+exports.getPostsByDate = async (req, res) => {
+    try {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            throw ({ message: errors.array() });
+
+        const { body } = req;
+
+        console.log(`${JSON.stringify(body)}`);
+
+        const response = await db.query(`SELECT id_post, creation_date, to_char(creation_date, 'DD/MM/YYYY') as creation_date_formated,
+                                            DATE_PART('day', current_timestamp-creation_date) as days,
+                                            CASE WHEN 
+                                                DATE_PART('day', current_timestamp-creation_date) > 7
+                                                THEN 'ALERT_MORE_7_DAYS' 
+                                                ELSE '' 
+                                            END as alert
+                                            FROM challenge.post
+                                            WHERE creation_date between :start_date AND :end_date
+                                            ORDER BY creation_date
+                                        `,
+            {
+                type: db.QueryTypes.SELECT,
+                replacements: {
+                    start_date: body.start_date,
+                    end_date: body.end_date
+                }
             })
 
         res.json(response);

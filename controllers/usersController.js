@@ -110,16 +110,61 @@ exports.delete = async (req, res) => {
     try {
         const { params } = req
 
-        const response = await db.query(`DELETE FROM challenge.user WHERE id_user = :id_user`, {
-            type: db.QueryTypes.DELETE,
-            replacements: {
-                id_user: params.id_user
-            }
-        })
+        await db.transaction(async (t) => {
 
-        res.json(response)
+            //  delete comments
+            await db.query(` DELETE FROM challenge.comment
+                                WHERE id_post IN
+                                ( SELECT id_post FROM challenge.post WHERE id_user = :id)
+                `,
+                {
+                    type: db.QueryTypes.DELETE,
+                    replacements: {
+                        id: params.id
+                    }
+                }, { transaction: t });
+
+            //  delete posts
+            await db.query(` DELETE FROM challenge.post
+                                WHERE id_user = :id
+                `,
+                {
+                    type: db.QueryTypes.DELETE,
+                    replacements: {
+                        id: params.id
+                    }
+                }, { transaction: t });
+
+            //  delete user
+            await db.query(` DELETE FROM challenge.user
+                                WHERE id_user = :id
+                    `,
+                {
+                    type: db.QueryTypes.DELETE,
+                    replacements: {
+                        id: params.id
+                    }
+                }, { transaction: t });
+
+        });
+
+        res.json({
+            "msgStatus": 'success',
+            "message": { "deleted_id": params.id },
+            "error_message": {},
+            "status": true
+        });
+
+
     } catch (error) {
         console.log(error);
-        res.json({ "Error": error });
+
+        res.json({
+            "msgStatus": 'error',
+            "message": {},
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
+
     }
 }

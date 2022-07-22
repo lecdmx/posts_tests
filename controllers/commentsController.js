@@ -22,16 +22,50 @@ exports.index = async (req, res) => {
 
 };
 
+exports.getCommentsByPost = async (req, res) => {
 
-exports.store = async (req, res) => {
     try {
 
         const errors = validationResult(req);
         if (!errors.isEmpty())
             throw ({ message: errors.array() });
 
+        const { body } = req;
+
+        const response = await db.query(`SELECT id_comment, comment, id_comment_parent, 
+                                            id_post, creation_date, to_char(creation_date, 'DD/MM/YYYY') as creation_date_formated
+                                            FROM challenge.comment 
+                                            WHERE id_post = :id_post
+                                            ORDER BY creation_date
+                                        `,
+            {
+                type: db.QueryTypes.SELECT,
+                replacements: {
+                    id_post: body.id_post
+                }
+            })
+
+        res.json(response);
+
+    }
+    catch (error) {
+        console.log(error);
+        res.json({ "Error": error });
+    }
+
+};
+
+exports.store = async (req, res) => {
+
+    try {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            throw ({ message: errors.array() });
 
         const { body } = req;
+
+        console.log(`${body.id_comment_parent}`);
 
         const response = await db.query(`INSERT INTO challenge.comment (comment, id_comment_parent, id_post, creation_date)
                                             VALUES (:comment, :id_comment_parent, :id_post, current_timestamp)
@@ -40,7 +74,7 @@ exports.store = async (req, res) => {
                 type: db.QueryTypes.INSERT,
                 replacements: {
                     comment: body.comment,
-                    id_comment_parent: body.id_comment_parent,
+                    id_comment_parent: (!body.id_comment_parent) ? null : body.id_comment_parent,
                     id_post: body.id_post
                 }
             })
@@ -110,16 +144,46 @@ exports.delete = async (req, res) => {
     try {
         const { params } = req
 
-        const response = await db.query(`DELETE FROM challenge.comment WHERE id_comment = :id_comment`, {
-            type: db.QueryTypes.DELETE,
-            replacements: {
-                id_comment: params.id_comment
-            }
-        })
+        await db.transaction(async (t) => {
 
-        res.json(response)
+            //  delete comments
+            await db.query(` DELETE FROM challenge.comment
+                                WHERE id_post IN
+                                ( SELECT id_post FROM challenge.post WHERE id_user = :id)
+                `,
+                {
+                    type: db.QueryTypes.DELETE,
+                    replacements: {
+                        id: params.id
+                    }
+                }, { transaction: t });
+
+
+            await db.query(`DELETE FROM challenge.comment WHERE id_comment = :id_comment`, {
+                type: db.QueryTypes.DELETE,
+                replacements: {
+                    id_comment: params.id
+                }
+            })
+
+        });
+
+
+        res.json({
+            "msgStatus": 'success',
+            "message": { "deleted_id": params.id },
+            "error_message": {},
+            "status": true
+        });
+
     } catch (error) {
         console.log(error);
-        res.json({ "Error": error });
+
+        res.json({
+            "msgStatus": 'error',
+            "message": {},
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
     }
 }
