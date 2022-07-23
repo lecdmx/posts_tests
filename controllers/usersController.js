@@ -1,5 +1,8 @@
 const { db } = require('../config/db');
 const { validationResult } = require("express-validator");
+const bcrypt = require('bcryptjs');
+const User = require('../config/models/User');
+const jwt = require('jsonwebtoken');
 
 exports.index = async (req, res) => {
 
@@ -53,7 +56,7 @@ exports.store = async (req, res) => {
                 replacements: {
                     name: body.name,
                     email: body.email,
-                    password: body.password,
+                    password: bcrypt.hashSync(body.password),
                     id_rol: body.id_rol
                 }
             })
@@ -218,4 +221,67 @@ exports.delete = async (req, res) => {
         });
 
     }
+}
+
+
+
+exports.login = async (req, res) => {
+
+    try {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            throw ({ message: errors.array() });
+
+        const { body } = req;
+
+        const response = await db.query(`SELECT id_user, name, email 
+                                            FROM challenge.user 
+                                            WHERE email = :email AND password = :password `, {
+            type: db.QueryTypes.SELECT,
+            replacements: {
+                email: body.email,
+                password: body.password
+            }
+        })
+
+        console.log(`${JSON.stringify(response)}`);
+
+        const user = response[0];
+
+        if (user) {
+
+            const token = jwt.sign({
+                name: user.name,
+                id: user.id_user
+            }, process.env.TOKEN_SECRET)
+
+
+            res.header('auth-token', token).json({
+                "error_message": {},
+                "results": { token },
+                "status": true
+            })
+
+        } else {
+
+            res.json({
+                "message": "Login failed",
+                "error_message": "User not found",
+                "status": false,
+                login: false
+            });
+
+        }
+
+
+    } catch (error) {
+        res.json({
+            "message": {},
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
+    }
+
+
 }

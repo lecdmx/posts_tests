@@ -29,5 +29,13 @@ router.put('/users',
 
 router.delete('/users/:id', usersController.delete);
 
+router.post('/login',
+    [
+        check('email').not().isEmpty().withMessage('email is a required parameter'),
+        check('email').isEmail().withMessage('email must be a valid email address'),
+        check('password').not().isEmpty().withMessage('name is a required parameter')
+    ],
+    usersController.login);
+
 
 module.exports = router;
