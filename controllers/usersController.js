@@ -3,6 +3,8 @@ const { validationResult } = require("express-validator");
 const bcrypt = require('bcryptjs');
 const User = require('../config/models/User');
 const jwt = require('jsonwebtoken');
+var salt = bcrypt.genSaltSync(10);
+var hash = bcrypt.hashSync("B4c0/\/", salt);
 
 exports.index = async (req, res) => {
 
@@ -59,7 +61,7 @@ exports.store = async (req, res) => {
                     password: bcrypt.hashSync(body.password),
                     id_rol: body.id_rol
                 }
-            })
+            });
 
         const generatedId = response[0][0].id_user;
 
@@ -235,33 +237,46 @@ exports.login = async (req, res) => {
 
         const { body } = req;
 
-        const response = await db.query(`SELECT id_user, name, email 
+        const response = await db.query(`SELECT id_user, name, email, password
                                             FROM challenge.user 
-                                            WHERE email = :email AND password = :password `, {
+                                            WHERE email = :email  `, {
             type: db.QueryTypes.SELECT,
             replacements: {
-                email: body.email,
-                password: body.password
+                email: body.email
             }
         })
-
-        console.log(`${JSON.stringify(response)}`);
 
         const user = response[0];
 
         if (user) {
 
-            const token = jwt.sign({
-                name: user.name,
-                id: user.id_user
-            }, process.env.TOKEN_SECRET)
+            const isValid = bcrypt.compareSync(body.password, user.password);
+           
+            if (isValid) {
+
+                const token = jwt.sign({
+                    name: user.name,
+                    id: user.id_user
+                }, process.env.TOKEN_SECRET)
 
 
-            res.header('auth-token', token).json({
-                "error_message": {},
-                "results": { token },
-                "status": true
-            })
+                res.header('auth-token', token).json({
+                    "error_message": {},
+                    "results": { token },
+                    "status": true
+                });
+
+            } else {
+
+                res.json({
+                    "message": "Login failed",
+                    "error_message": "User not found",
+                    "status": false,
+                    login: false
+                });
+
+
+            }
 
         } else {
 
@@ -276,6 +291,9 @@ exports.login = async (req, res) => {
 
 
     } catch (error) {
+
+        console.log(error);
+
         res.json({
             "message": {},
             "error_message": (error.message) ? error.message : "General error",

@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const routesUsers = require('./routes/routesUsers');
 const routesPost = require('./routes/routesPost');
-const routersComments = require('./routes/routersComments');
+const routesComments = require('./routes/routesComments');
 const routesLogs = require('./routes/routesLogs');
 const routesPermissions = require('./routes/routesPermissions');
 const helmet = require('helmet');
@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(routesUsers);
 app.use(routesPost);
-app.use(routersComments);
+app.use(routesComments);
 app.use(routesLogs);
 app.use(routesPermissions);
 
