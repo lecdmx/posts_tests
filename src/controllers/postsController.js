@@ -79,7 +79,6 @@ exports.getPostsByDate = async (req, res) => {
 
     }
     catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
@@ -145,7 +144,6 @@ exports.store = async (req, res) => {
 
     }
     catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},

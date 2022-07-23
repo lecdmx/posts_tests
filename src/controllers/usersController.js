@@ -281,7 +281,9 @@ exports.login = async (req, res) => {
                 const token = jwt.sign({
                     name: user.name,
                     id: user.id_user
-                }, process.env.TOKEN_SECRET)
+                }, process.env.TOKEN_SECRET, {
+                    expiresIn: '100d'
+                })
 
 
                 res.header('auth-token', token).json({

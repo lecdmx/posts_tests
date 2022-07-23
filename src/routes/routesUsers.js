@@ -40,7 +40,6 @@ router.post('/login',
         check('email').isEmail().withMessage('email must be a valid email address'),
         check('password').not().isEmpty().withMessage('name is a required parameter')
     ],
-    verifyToken,
     usersController.login);
 
 

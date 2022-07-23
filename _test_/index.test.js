@@ -1,22 +1,68 @@
 const app = require('../index');
 const request = require('supertest');
-const validationBody = require('./src/validationBody');
+const { validationBodyPostbyDate } = require('./src/validationBody');
+const { validationBodyStorePost } = require('./src/validationBody');
+const { validationAuthentication } = require('./src/validationAuthentication');
 
-describe('Test endpoint Addika Challenge - Body Validation ', () => {
+// describe('Test endpoint Addika Challenge - Body validation ', () => {
 
-    for (const i in validationBody) {
+// for (const i in validationBodyPostbyDate) {
 
-        it(validationBody[i].label, async () => {
+//     it(validationBodyPostbyDate[i].label, async () => {
+//         await request(app)
+//             .post('/postsbydate')
+//             .send(validationBodyPostbyDate[i].test)
+//             .expect('Content-Type', /json/)
+//             .expect((res) => {
+//                 expect(res.body.status).toEqual(validationBodyPostbyDate[i].status)
+//                 expect(res.body.error_message[0].msg).toEqual(validationBodyPostbyDate[i].error_message)
+//             })
+//     })
+
+// }
+
+// })
+
+
+// Validate login
+describe('Test endpoint Addika Challenge - Authentication validation', () => {
+
+    console.log(`validationAuthentication ${JSON.stringify(validationAuthentication)}`);
+
+
+    it(validationAuthentication[0].label, async () => {
+
+        for (const i in validationBodyStorePost) {
+
             await request(app)
-                .post('/postsbydate')
-                .send(validationBody[i].test)
+                .post('/login')
+                .send(validationAuthentication[0].test)
                 .expect('Content-Type', /json/)
                 .expect((res) => {
-                    expect(res.body.status).toEqual(validationBody[i].status)
-                    expect(res.body.error_message[0].msg).toEqual(validationBody[i].error_message)
+                    expect(res.body.status).toBe(validationAuthentication[0].response.status)
                 })
-        })
+        }
+    })
 
-    }
+
 
 })
+
+
+
+    // for (const i in validationBodyStorePost) {
+
+    //     it(validationBodyStorePost[i].label, async () => {
+    //         await request(app)
+    //             .post('/posts')
+    //             .send(validationBodyStorePost[i].test)
+    //             .expect('Content-Type', /json/)
+    //             .expect((res) => {
+    //                 expect(res.body.status).toEqual(validationBodyStorePost[i].status)
+    //                 expect(res.body.error_message[0].msg).toEqual(validationBodyStorePost[i].error_message)
+    //             })
+    //     })
+
+    // }
+
+
