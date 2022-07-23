@@ -1,10 +1,10 @@
 const express = require('express');
 const app = express();
-const routesUsers = require('./routes/routesUsers');
-const routesPost = require('./routes/routesPost');
-const routesComments = require('./routes/routesComments');
-const routesLogs = require('./routes/routesLogs');
-const routesPermissions = require('./routes/routesPermissions');
+const routesUsers = require('./src/routes/routesUsers');
+const routesPost = require('./src/routes/routesPost');
+const routesComments = require('./src/routes/routesComments');
+const routesLogs = require('./src/routes/routesLogs');
+const routesPermissions = require('./src/routes/routesPermissions');
 const helmet = require('helmet');
 const cors = require('cors');
 
@@ -26,3 +26,5 @@ app.use(routesPermissions);
 app.listen(PORT, () => {
     console.log(`App listen port ${PORT}`)
 })
+
+module.exports = app;
