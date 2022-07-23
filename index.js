@@ -4,6 +4,7 @@ const routesUsers = require('./routes/routesUsers');
 const routesPost = require('./routes/routesPost');
 const routersComments = require('./routes/routersComments');
 const routesLogs = require('./routes/routesLogs');
+const routesPermissions = require('./routes/routesPermissions');
 const helmet = require('helmet');
 const cors = require('cors');
 
@@ -20,6 +21,7 @@ app.use(routesUsers);
 app.use(routesPost);
 app.use(routersComments);
 app.use(routesLogs);
+app.use(routesPermissions);
 
 app.listen(PORT, () => {
     console.log(`App listen port ${PORT}`)

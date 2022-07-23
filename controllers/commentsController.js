@@ -12,12 +12,24 @@ exports.index = async (req, res) => {
                 type: db.QueryTypes.SELECT
             })
 
-        res.json(response);
+        res.json({
+            "message": {},
+            "results": response,
+            "error_message": {},
+            "status": true
+        });
 
     }
     catch (error) {
         console.log(error);
-        res.json({ "Error": error });
+
+        res.json({
+            "message": {},
+            "results": [],
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
+
     }
 
 };
@@ -45,12 +57,24 @@ exports.getCommentsByPost = async (req, res) => {
                 }
             })
 
-        res.json(response);
+        res.json({
+            "message": {},
+            "results": response,
+            "error_message": {},
+            "status": true
+        });
 
     }
     catch (error) {
         console.log(error);
-        res.json({ "Error": error });
+
+        res.json({
+            "message": {},
+            "results": [],
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
+
     }
 
 };
@@ -69,6 +93,7 @@ exports.store = async (req, res) => {
 
         const response = await db.query(`INSERT INTO challenge.comment (comment, id_comment_parent, id_post, creation_date)
                                             VALUES (:comment, :id_comment_parent, :id_post, current_timestamp)
+                                            RETURNING id_comment
                                         `,
             {
                 type: db.QueryTypes.INSERT,
@@ -79,12 +104,24 @@ exports.store = async (req, res) => {
                 }
             })
 
-        res.json(response);
+        const generatedId = response[0][0].id_comment;
+
+        res.json({
+            "message": { "generated_id": generatedId },
+            "error_message": {},
+            "status": true
+        });
 
     }
     catch (error) {
         console.log(error);
-        res.json({ "Error": error });
+
+        res.json({
+            "message": {},
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
+
     }
 
 };
@@ -94,7 +131,7 @@ exports.show = async (req, res) => {
     try {
         const { params } = req;
 
-        const response = await db.query(`SELECT id_comment, comment, id_comment_parent, id_post, creation_date, to_char(creation_date, 'DD/MM/YYYY') as creation_date_formated
+        const response = await db.query(`SELsECT id_comment, comment, id_comment_parent, id_post, creation_date, to_char(creation_date, 'DD/MM/YYYY') as creation_date_formated
                                         FROM challenge.comment WHERE id_comment = :id`, {
             type: db.QueryTypes.SELECT,
             replacements: {
@@ -102,12 +139,27 @@ exports.show = async (req, res) => {
             }
         })
 
-        res.json(response)
-    } catch (error) {
-        console.log(error);
-        res.json({ "Error": error });
+        res.json({
+            "message": {},
+            "results": response,
+            "error_message": {},
+            "status": true
+        });
+
     }
-}
+    catch (error) {
+        console.log(error);
+
+        res.json({
+            "message": {},
+            "results": [],
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
+
+    }
+
+};
 
 
 exports.update = async (req, res) => {
@@ -119,7 +171,7 @@ exports.update = async (req, res) => {
 
         const { body } = req;
 
-        const response = await db.query(
+        await db.query(
             `UPDATE challenge.comment SET comment = :comment, 
                 WHERE id_comment = :id_comment`,
             {
@@ -132,10 +184,21 @@ exports.update = async (req, res) => {
             }
         )
 
-        res.json(response)
+        res.json({
+            "message": { "updated_id": params.id_user },
+            "error_message": {},
+            "status": true
+        });
+
     } catch (error) {
         console.log(error);
-        res.json({ "Error": error });
+
+        res.json({
+            "message": {},
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
+
     }
 }
 
@@ -175,7 +238,6 @@ exports.delete = async (req, res) => {
 
 
         res.json({
-            "msgStatus": 'success',
             "message": { "deleted_id": body.id },
             "error_message": {},
             "status": true
@@ -185,7 +247,6 @@ exports.delete = async (req, res) => {
         console.log(error);
 
         res.json({
-            "msgStatus": 'error',
             "message": {},
             "error_message": (error.message) ? error.message : "General error",
             "status": false

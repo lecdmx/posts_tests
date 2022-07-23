@@ -18,12 +18,24 @@ exports.index = async (req, res) => {
                 type: db.QueryTypes.SELECT
             })
 
-        res.json(response);
+        res.json({
+            "message": {},
+            "results": response,
+            "error_message": {},
+            "status": true
+        });
 
     }
     catch (error) {
         console.log(error);
-        res.json({ "Error": error });
+
+        res.json({
+            "message": {},
+            "results": [],
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
+
     }
 
 };
@@ -58,12 +70,23 @@ exports.getPostsByDate = async (req, res) => {
                 }
             })
 
-        res.json(response);
+        res.json({
+            "message": {},
+            "results": response,
+            "error_message": {},
+            "status": true
+        });
 
     }
     catch (error) {
         console.log(error);
-        res.json({ "Error": error });
+
+        res.json({
+            "message": {},
+            "results": [],
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
     }
 
 };
@@ -97,7 +120,6 @@ exports.store = async (req, res) => {
             console.log(JSON.stringify(response));
 
             generatedPostId = response[0][0].id_post;
-            console.log(`generatedPostId = ${JSON.stringify(response)}`);
 
             await db.query(`INSERT INTO challenge.log (id_user, id_post, content)
                                             VALUES (:id_user, :id_post, :content)
@@ -115,7 +137,6 @@ exports.store = async (req, res) => {
         });
 
         res.json({
-            "msgStatus": 'success',
             "message": { "generated_id": generatedPostId },
             "error_message": {},
             "status": true
@@ -127,7 +148,6 @@ exports.store = async (req, res) => {
         console.log(error);
 
         res.json({
-            "msgStatus": 'error',
             "message": {},
             "error_message": (error.message) ? error.message : "General error",
             "status": false
@@ -151,11 +171,23 @@ exports.show = async (req, res) => {
             }
         })
 
-        res.json(response);
+        res.json({
+            "message": {},
+            "results": response,
+            "error_message": {},
+            "status": true
+        });
 
     } catch (error) {
         console.log(error);
-        res.json({ "Error": error });
+
+        res.json({
+            "message": {},
+            "results": [],
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
+
     }
 }
 
@@ -206,7 +238,6 @@ exports.delete = async (req, res) => {
         });
 
         res.json({
-            "msgStatus": 'success',
             "message": { "deleted_id": body.id_post },
             "error_message": {},
             "status": true
@@ -218,7 +249,6 @@ exports.delete = async (req, res) => {
         console.log(error);
 
         res.json({
-            "msgStatus": 'error',
             "message": {},
             "error_message": (error.message) ? error.message : "General error",
             "status": false
@@ -267,8 +297,7 @@ exports.update = async (req, res) => {
         });
 
         res.json({
-            "msgStatus": 'success',
-            "message": { "deleted_id": body.id_post },
+            "message": { "updated_id": body.id_post },
             "error_message": {},
             "status": true
         });
@@ -279,7 +308,6 @@ exports.update = async (req, res) => {
         console.log(error);
 
         res.json({
-            "msgStatus": 'error',
             "message": {},
             "error_message": (error.message) ? error.message : "General error",
             "status": false

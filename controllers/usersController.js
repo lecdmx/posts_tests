@@ -11,12 +11,24 @@ exports.index = async (req, res) => {
                 type: db.QueryTypes.SELECT
             })
 
-        res.json(response);
+        res.json({
+            "message": {},
+            "results": response,
+            "error_message": {},
+            "status": true
+        });
 
     }
     catch (error) {
         console.log(error);
-        res.json({ "Error": error });
+
+        res.json({
+            "message": {},
+            "results": [],
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
+
     }
 
 };
@@ -46,12 +58,24 @@ exports.store = async (req, res) => {
                 }
             })
 
-        res.json(response);
+        const generatedId = response[0][0].id_user;
+
+        res.json({
+            "message": { "generated_id": generatedId },
+            "error_message": {},
+            "status": true
+        });
 
     }
     catch (error) {
         console.log(error);
-        res.json({ "Error": error });
+
+        res.json({
+            "message": {},
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
+
     }
 
 };
@@ -69,12 +93,27 @@ exports.show = async (req, res) => {
             }
         })
 
-        res.json(response)
-    } catch (error) {
-        console.log(error);
-        res.json({ "Error": error });
+        res.json({
+            "message": {},
+            "results": response,
+            "error_message": {},
+            "status": true
+        });
+
     }
-}
+    catch (error) {
+        console.log(error);
+
+        res.json({
+            "message": {},
+            "results": [],
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
+
+    }
+
+};
 
 
 exports.update = async (req, res) => {
@@ -86,7 +125,7 @@ exports.update = async (req, res) => {
 
         const { body } = req;
 
-        const response = await db.query(
+        await db.query(
             `UPDATE challenge.user SET name = :name, email= :email WHERE id_user = :id_user`,
             {
                 type: db.QueryTypes.UPDATE,
@@ -98,10 +137,24 @@ exports.update = async (req, res) => {
             }
         )
 
-        res.json(response)
+
+        res.json({
+            "message": { "updated_id": params.id_user },
+            "error_message": {},
+            "status": true
+        });
+
+
     } catch (error) {
         console.log(error);
-        res.json({ "Error": error });
+
+
+        res.json({
+            "message": {},
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
+
     }
 }
 
@@ -149,7 +202,6 @@ exports.delete = async (req, res) => {
         });
 
         res.json({
-            "msgStatus": 'success',
             "message": { "deleted_id": params.id },
             "error_message": {},
             "status": true
@@ -160,7 +212,6 @@ exports.delete = async (req, res) => {
         console.log(error);
 
         res.json({
-            "msgStatus": 'error',
             "message": {},
             "error_message": (error.message) ? error.message : "General error",
             "status": false
