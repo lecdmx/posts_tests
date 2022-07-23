@@ -1,10 +1,7 @@
 const { db } = require('../config/db');
 const { validationResult } = require("express-validator");
 const bcrypt = require('bcryptjs');
-const User = require('../config/models/User');
 const jwt = require('jsonwebtoken');
-var salt = bcrypt.genSaltSync(10);
-var hash = bcrypt.hashSync("B4c0/\/", salt);
 
 exports.index = async (req, res) => {
 
@@ -49,27 +46,54 @@ exports.store = async (req, res) => {
 
         const { body } = req;
 
-        const response = await db.query(`INSERT INTO challenge.user (name, email, password, id_rol)
+        let generatedId = 0;
+
+        const responseEmailExists = await db.query(`SELECT id_user, name, email, password
+            FROM challenge.user 
+            WHERE email = :email  `, {
+            type: db.QueryTypes.SELECT,
+            replacements: {
+                email: body.email
+            }
+        })
+
+        const user = responseEmailExists[0];
+
+        console.log(`user ${user}`);
+
+        if (user) {
+
+            res.json({
+                "message": {},
+                "error_message": "Email already exists",
+                "status": false
+            });
+
+        } else {
+
+            let response = await db.query(`INSERT INTO challenge.user (name, email, password, id_rol)
                                             VALUES (:name, :email, :password, :id_rol) 
                                             RETURNING id_user
                                         `,
-            {
-                type: db.QueryTypes.INSERT,
-                replacements: {
-                    name: body.name,
-                    email: body.email,
-                    password: bcrypt.hashSync(body.password),
-                    id_rol: body.id_rol
-                }
+                {
+                    type: db.QueryTypes.INSERT,
+                    replacements: {
+                        name: body.name,
+                        email: body.email,
+                        password: bcrypt.hashSync(body.password),
+                        id_rol: body.id_rol
+                    }
+                });
+
+            generatedId = response[0][0].id_user;
+
+            res.json({
+                "message": { "generated_id": generatedId },
+                "error_message": {},
+                "status": true
             });
 
-        const generatedId = response[0][0].id_user;
-
-        res.json({
-            "message": { "generated_id": generatedId },
-            "error_message": {},
-            "status": true
-        });
+        }
 
     }
     catch (error) {
@@ -251,7 +275,7 @@ exports.login = async (req, res) => {
         if (user) {
 
             const isValid = bcrypt.compareSync(body.password, user.password);
-           
+
             if (isValid) {
 
                 const token = jwt.sign({

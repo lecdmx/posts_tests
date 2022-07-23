@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { check } = require("express-validator");
 const usersController = require('../controllers/usersController');
+const { verifyToken } = require('../middleware/authentication');
 
 router.get('/users', usersController.index);
 
@@ -13,6 +14,7 @@ router.post('/users',
         check('id_rol').not().isEmpty().withMessage('id_rol is a required parameter'),
         check('id_rol').isNumeric().withMessage('id_post must be a number')
     ],
+    verifyToken,
     usersController.store);
 
 router.get('/users/:id', usersController.show);
@@ -25,9 +27,12 @@ router.put('/users',
         check('id_rol').not().isEmpty().withMessage('id_rol is a required parameter'),
         check('id_rol').isNumeric().withMessage('id_post must be a number')
     ],
+    verifyToken,
     usersController.update);
 
-router.delete('/users/:id', usersController.delete);
+router.delete('/users/:id',
+    verifyToken,
+    usersController.delete);
 
 router.post('/login',
     [
@@ -35,6 +40,7 @@ router.post('/login',
         check('email').isEmail().withMessage('email must be a valid email address'),
         check('password').not().isEmpty().withMessage('name is a required parameter')
     ],
+    verifyToken,
     usersController.login);
 
 
