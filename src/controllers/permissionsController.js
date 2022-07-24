@@ -45,8 +45,7 @@ exports.store = async (req, res) => {
 
 exports.deletePermission = async (req, res) => {
     try {
-        const { body } = req
-
+        const { body } = req;
 
         await db.query(` DELETE FROM challenge.rel_rol_permission
                                             WHERE id_rol = :id_rol AND id_permission :id_permission

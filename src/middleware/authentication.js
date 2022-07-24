@@ -7,6 +7,13 @@ const USER_TYPE = {
     STANDARD: 2
 }
 
+
+const PERMISSION_POSTS = {
+    GET_CREATE_DELETE: 1,
+    UPDATE: 2,
+    DELETE: 3
+}
+
 exports.verifyToken = async (req, res, next) => {
 
     const { body } = req;
@@ -101,3 +108,4 @@ exports.verifyIsAdmin = async (req, res, next) => {
     }
 
 };
+
