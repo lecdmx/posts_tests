@@ -1,31 +1,19 @@
+const invalidToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiY29sb3JhZG8iLCJpZCI6MTYsImlhdCI6MTY1ODYxNjk2MSwiZXhwIjoxNjU5MjIxNzYxfQ.6EtrK49rjb__UZrrqe-JCurmW0R6ZDGWJjE7M47JPfI';
+const validToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoieDEiLCJpZCI6MzUsImlkX3JvbCI6MSwiaWF0IjoxNjU4NjI0NTcxLCJleHAiOjE2NjcyNjQ1NzF9._vInTjI0eJmsw4pziiATc3_TdBn0TLhW8JMZgnQTBD8';
 const app = require('../index');
 const request = require('supertest');
 const { validationBodyPostbyDate } = require('./src/validationBody');
 const { validationBodyStorePost } = require('./src/validationBody');
-const { validationAuthentication, validationUsers, validationGetUser } = require('./src/users.test');
 
-// describe('Test endpoint Addika Challenge - Body validation ', () => {
-
-// for (const i in validationBodyPostbyDate) {
-
-//     it(validationBodyPostbyDate[i].label, async () => {
-//         await request(app)
-//             .post('/postsbydate')
-//             .send(validationBodyPostbyDate[i].test)
-//             .expect('Content-Type', /json/)
-//             .expect((res) => {
-//                 expect(res.body.status).toEqual(validationBodyPostbyDate[i].status)
-//                 expect(res.body.error_message[0].msg).toEqual(validationBodyPostbyDate[i].error_message)
-//             })
-//     })
-
-// }
-
-// })
+const { validationAuthentication,
+    validationUsers,
+    validationGetUser,
+    validationUpdateUser,
+    validationAddUser } = require('./src/users.test');
 
 
 // Validate login
-describe('Test endpoint Addika Challenge - Authentication validation', () => {
+describe('Test endpoint /login', () => {
 
     console.log(`validationAuthentication ${JSON.stringify(validationAuthentication)}`);
 
@@ -36,6 +24,9 @@ describe('Test endpoint Addika Challenge - Authentication validation', () => {
                 .post('/login')
                 .send(validationAuthentication[i].test)
                 .expect('Content-Type', /json/)
+                .set('Accept', 'application/json')
+                .set('Authorization', validToken)
+                .expect(200)
                 .expect((res) => {
                     expect(res.body.status).toBe(validationAuthentication[i].response.status)
                 })
@@ -47,9 +38,7 @@ describe('Test endpoint Addika Challenge - Authentication validation', () => {
 })
 
 
-describe('Test endpoint Addika Challenge - Users validation', () => {
-
-    console.log(`validationUsers ${JSON.stringify(validationUsers)}`);
+describe('Test endpoint USERS /users', () => {
 
     for (const i in validationUsers) {
         it(validationUsers[i].label, async () => {
@@ -58,12 +47,17 @@ describe('Test endpoint Addika Challenge - Users validation', () => {
                 .post('/users')
                 .send(validationUsers[i].test)
                 .expect('Content-Type', /json/)
+                .set('Accept', 'application/json')
+                .set('Authorization', validToken)
+                .expect(200)
                 .expect((res) => {
-                    expect(res.body.status).toBe(validationUsers[i].response.status)
                 })
         })
 
     }
+})
+
+describe('Test endpoint USERS /getUser', () => {
 
     for (const i in validationGetUser) {
         it(validationGetUser[i].label, async () => {
@@ -72,31 +66,92 @@ describe('Test endpoint Addika Challenge - Users validation', () => {
                 .post('/getUser')
                 .send(validationGetUser[i].test)
                 .expect('Content-Type', /json/)
+                .set('Accept', 'application/json')
+                .set('Authorization', validToken)
+                .expect(200)
                 .expect((res) => {
-                    expect(res.body.status).toBe(validationGetUser[i].response.status)
                 })
         })
 
     }
 
+})
+
+describe('Test endpoint USERS /saveUser', () => {
+
+    for (const i in validationAddUser) {
+        it(validationAddUser[i].label, async () => {
+
+            await request(app)
+                .post('/saveUser')
+                .send(validationAddUser[i].test)
+                .expect('Content-Type', /json/)
+                .set('Accept', 'application/json')
+                .set('Authorization', validToken)
+                .expect(200)
+                .expect((res) => {
+                })
+        })
+
+    }
+
+})
+
+
+describe('Test endpoint USERS update /users', () => {
+
+    for (const i in validationUpdateUser) {
+        it(validationUpdateUser[i].label, async () => {
+
+            await request(app)
+                .post('/users')
+                .send(validationUpdateUser[i].test)
+                .expect('Content-Type', /json/)
+                .set('Accept', 'application/json')
+                .set('Authorization', validToken)
+                .expect(200)
+                .expect((res) => {
+                })
+        })
+
+    }
+
+})
+
+
+describe('Test endpoint POSTS /postsbydate', () => {
+
+    for (const i in validationBodyPostbyDate) {
+
+        it(validationBodyPostbyDate[i].label, async () => {
+            await request(app)
+                .post('/postsbydate')
+                .send(validationBodyPostbyDate[i].test)
+                .expect('Content-Type', /json/)
+                .expect((res) => {
+                })
+        })
+
+    }
 
 })
 
 
 
-    // for (const i in validationBodyStorePost) {
+describe('Test endpoint POSTS /posts', () => {
 
-    //     it(validationBodyStorePost[i].label, async () => {
-    //         await request(app)
-    //             .post('/posts')
-    //             .send(validationBodyStorePost[i].test)
-    //             .expect('Content-Type', /json/)
-    //             .expect((res) => {
-    //                 expect(res.body.status).toEqual(validationBodyStorePost[i].status)
-    //                 expect(res.body.error_message[0].msg).toEqual(validationBodyStorePost[i].error_message)
-    //             })
-    //     })
+    for (const i in validationBodyStorePost) {
 
-    // }
+        it(validationBodyStorePost[i].label, async () => {
+            await request(app)
+                .post('/posts')
+                .send(validationBodyStorePost[i].test)
+                .expect('Content-Type', /json/)
+                .expect((res) => {
+                })
+        })
 
+    }
+
+})
 

@@ -65,8 +65,6 @@ exports.store = async (req, res) => {
 
         const user = responseEmailExists[0];
 
-        console.log(`user ${user}`);
-
         if (user) {
 
             res.json({
@@ -103,7 +101,6 @@ exports.store = async (req, res) => {
 
     }
     catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
@@ -140,7 +137,6 @@ exports.show = async (req, res) => {
 
     }
     catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
@@ -186,8 +182,6 @@ exports.update = async (req, res) => {
 
 
     } catch (error) {
-        console.log(error);
-
 
         res.json({
             "message": {},
@@ -249,7 +243,6 @@ exports.delete = async (req, res) => {
 
 
     } catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
@@ -329,8 +322,6 @@ exports.login = async (req, res) => {
 
 
     } catch (error) {
-
-        console.log(error);
 
         res.json({
             "message": {},
