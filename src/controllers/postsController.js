@@ -1,4 +1,4 @@
-const { db } = require('../../config/db');
+const { db } = require('../config/db');
 const { validationResult } = require("express-validator");
 
 exports.index = async (req, res) => {
@@ -111,7 +111,7 @@ exports.store = async (req, res) => {
                 {
                     type: db.QueryTypes.INSERT,
                     replacements: {
-                        id_user: body.id_user,
+                        id_user: body.id_user_loged,
                         post: body.post
                     }
                 }, { transaction: t });
@@ -126,7 +126,7 @@ exports.store = async (req, res) => {
                 {
                     type: db.QueryTypes.INSERT,
                     replacements: {
-                        id_user: body.id_user,
+                        id_user: body.id_user_loged,
                         id_post: generatedPostId,
                         content: `User ${body.id_user} created Post ${generatedPostId}`
                     }
@@ -226,9 +226,9 @@ exports.delete = async (req, res) => {
                 {
                     type: db.QueryTypes.INSERT,
                     replacements: {
-                        id_user: body.id_user,
+                        id_user: body.id_user_loged,
                         id_post: body.id_post,
-                        content: `User ${body.id_user} deleted Post ${body.id_post}`
+                        content: `User ${body.id_user_loged} deleted Post ${body.id_post}`
                     }
                 }, { transaction: t });
 
@@ -285,9 +285,9 @@ exports.update = async (req, res) => {
                 {
                     type: db.QueryTypes.INSERT,
                     replacements: {
-                        id_user: body.id_user,
+                        id_user: body.id_user_loged,
                         id_post: body.id_post,
-                        content: `User ${body.id_user} updated Post ${body.id_post}`
+                        content: `User ${body.id_user_loged} updated Post ${body.id_post}`
                     }
                 }, { transaction: t });
 

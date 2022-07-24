@@ -1,4 +1,4 @@
-const { db } = require('../../config/db');
+const { db } = require('../config/db');
 const { validationResult } = require("express-validator");
 
 
@@ -12,13 +12,14 @@ exports.store = async (req, res) => {
 
         const { body } = req;
 
-        await db.query(`INSERT INTO challenge.rel_rol_permission (id_rol, id_permission) 
-                                            VALUES (:id_rol, :id_permission)
-                                        `,
+        await db.query(
+            `INSERT INTO challenge.rel_user_permission (id_user, id_permission)
+                    VALUES (:id_user, :id_permission)                                        
+                `,
             {
                 type: db.QueryTypes.INSERT,
                 replacements: {
-                    id_rol: body.id_rol,
+                    id_user: body.id_user,
                     id_permission: body.id_permission,
                 }
             })
@@ -47,13 +48,15 @@ exports.deletePermission = async (req, res) => {
     try {
         const { body } = req;
 
-        await db.query(` DELETE FROM challenge.rel_rol_permission
-                                            WHERE id_rol = :id_rol AND id_permission :id_permission
-                                        `,
+        await db.query(
+            ` DELETE FROM challenge.rel_user_permission                
+                    WHERE id_user = :id_user                 
+                    AND id_permission = :id_permission
+                `,
             {
                 type: db.QueryTypes.INSERT,
                 replacements: {
-                    id_rol: body.id_rol,
+                    id_user: body.id_user,
                     id_permission: body.id_permission,
                 }
             })

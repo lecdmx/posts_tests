@@ -1,4 +1,4 @@
-const { db } = require('../../config/db');
+const { db } = require('../config/db');
 const { validationResult } = require("express-validator");
 
 exports.index = async (req, res) => {
@@ -91,16 +91,17 @@ exports.store = async (req, res) => {
 
         console.log(`${body.id_comment_parent}`);
 
-        const response = await db.query(`INSERT INTO challenge.comment (comment, id_comment_parent, id_post, creation_date)
-                                            VALUES (:comment, :id_comment_parent, :id_post, current_timestamp)
+        const response = await db.query(`INSERT INTO challenge.comment (comment, id_comment_parent, id_post, creation_date, id_user)
+                                            VALUES (:comment, :id_comment_parent, :id_post, current_timestamp, :id_user)
                                             RETURNING id_comment
                                         `,
             {
                 type: db.QueryTypes.INSERT,
                 replacements: {
                     comment: body.comment,
-                    id_comment_parent: (!body.id_comment_parent) ? null : body.id_comment_parent,
-                    id_post: body.id_post
+                    id_post: body.id_post,
+                    id_user: (!body.id_user) ? null : body.id_user,
+                    id_comment_parent: (!body.id_comment_parent) ? null : body.id_comment_parent
                 }
             })
 

@@ -1,18 +1,8 @@
 const jwt = require('jsonwebtoken');
-const { db } = require('../../config/db');
+const { db } = require('../config/db');
+const constants = require('../config/util');
 const { validationResult } = require("express-validator");
 
-const USER_TYPE = {
-    ADMIN: 1,
-    STANDARD: 2
-}
-
-
-const PERMISSION_POSTS = {
-    GET_CREATE_DELETE: 1,
-    UPDATE: 2,
-    DELETE: 3
-}
 
 exports.verifyToken = async (req, res, next) => {
 
@@ -75,7 +65,7 @@ exports.verifyIsAdmin = async (req, res, next) => {
                 type: db.QueryTypes.SELECT,
                 replacements: {
                     id_user: body.id_user_loged,
-                    id_rol: USER_TYPE.ADMIN
+                    id_rol: constants.USER_TYPE.ADMIN
                 }
             })
 
@@ -109,3 +99,180 @@ exports.verifyIsAdmin = async (req, res, next) => {
 
 };
 
+
+exports.verifyHavePermissionDeleteComments = async (req, res, next) => {
+
+    try {
+
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            throw ({ message: errors.array() });
+
+        const { body } = req;
+        console.log(`body ${JSON.stringify(body)}`);
+
+        let response = await db.query(
+            ` SELECT rel.id_permission
+                FROM challenge.user r
+                JOIN challenge.rel_user_permission rel 
+                    ON (rel.id_user = r.id_user)
+                JOIN challenge.permission p 
+                    ON (rel.id_permission = p.id_permission)
+                WHERE rel.id_user = :id_user
+                    AND p.id_permission = :id_permission `,
+            {
+                type: db.QueryTypes.SELECT,
+                replacements: {
+                    id_user: body.id_user_loged,
+                    id_permission: constants.PERMISSIONS.DELETE_COMMENT
+                }
+            })
+
+        console.log(`${JSON.stringify(response)}`);
+
+        if (!response || response.length === 0) {
+
+            res.json({
+                "message": {},
+                "error_message": "Invalid permissions",
+                "status": false
+            });
+
+        } else {
+
+            next();
+
+        }
+
+    }
+    catch (error) {
+        console.log(error);
+
+        res.json({
+            "message": {},
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
+
+    }
+
+};
+
+exports.verifyHavePermissionDeleteComments = async (req, res, next) => {
+
+    try {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            throw ({ message: errors.array() });
+
+        const { body } = req;
+        console.log(`body ${JSON.stringify(body)}`);
+
+        let response = await db.query(
+            ` SELECT rel.id_permission
+                FROM challenge.user r
+                JOIN challenge.rel_user_permission rel 
+                    ON (rel.id_user = r.id_user)
+                JOIN challenge.permission p 
+                    ON (rel.id_permission = p.id_permission)
+                WHERE rel.id_user = :id_user
+                    AND p.id_permission = :id_permission `,
+            {
+                type: db.QueryTypes.SELECT,
+                replacements: {
+                    id_user: body.id_user_loged,
+                    id_permission: constants.PERMISSIONS.UPDATE_POST
+                }
+            })
+
+        console.log(`${JSON.stringify(response)}`);
+
+        if (!response || response.length === 0) {
+
+            res.json({
+                "message": {},
+                "error_message": "Invalid permissions",
+                "status": false
+            });
+
+        } else {
+
+            next();
+
+        }
+
+    }
+    catch (error) {
+        console.log(error);
+
+        res.json({
+            "message": {},
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
+
+    }
+
+};
+
+
+exports.verifyHavePermissionCreateDeleteGETPOSTS = async (req, res, next) => {
+
+    try {
+
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty())
+            throw ({ message: errors.array() });
+
+        const { body } = req;
+        console.log(`body ${JSON.stringify(body)}`);
+
+        let response = await db.query(
+            ` SELECT rel.id_permission
+                FROM challenge.user r
+                JOIN challenge.rel_user_permission rel 
+                    ON (rel.id_user = r.id_user)
+                JOIN challenge.permission p 
+                    ON (rel.id_permission = p.id_permission)
+                WHERE rel.id_user = :id_user
+                    AND p.id_permission = :id_permission `,
+            {
+                type: db.QueryTypes.SELECT,
+                replacements: {
+                    id_user: body.id_user_loged,
+                    id_permission: constants.PERMISSIONS.GET_CREATE_DELETE_POST
+                }
+            })
+
+        console.log(`${JSON.stringify(response)}`);
+
+        if (!response || response.length === 0) {
+
+            res.json({
+                "message": {},
+                "error_message": "Invalid permissions",
+                "status": false
+            });
+
+        } else {
+
+            next();
+
+        }
+
+    }
+    catch (error) {
+        console.log(error);
+
+        res.json({
+            "message": {},
+            "error_message": (error.message) ? error.message : "General error",
+            "status": false
+        });
+
+    }
+
+};

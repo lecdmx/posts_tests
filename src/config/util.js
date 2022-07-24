@@ -1,0 +1,12 @@
+exports.USER_TYPE = {
+    ADMIN: 1,
+    STANDARD: 2
+}
+
+
+exports.PERMISSIONS = {
+    GET_CREATE_DELETE_POST: 1,
+    UPDATE_POST: 2,
+    DELETE_COMMENT: 3
+}
+
