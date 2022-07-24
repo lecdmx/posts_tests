@@ -6,9 +6,11 @@ const jwt = require('jsonwebtoken');
 exports.index = async (req, res) => {
 
     try {
-        const response = await db.query(`SELECT id_user, name, email, password, id_rol
-                                            FROM challenge.user 
-                                        `,
+      
+        const response = await db.query(
+            `SELECT id_user, name, email, id_rol            
+                FROM challenge.user 
+                ORDER BY id_rol `,
             {
                 type: db.QueryTypes.SELECT
             })
@@ -37,7 +39,10 @@ exports.index = async (req, res) => {
 
 
 exports.store = async (req, res) => {
+
     try {
+        
+        console.log('users.store');
 
         const errors = validationResult(req);
         if (!errors.isEmpty())
@@ -48,14 +53,16 @@ exports.store = async (req, res) => {
 
         let generatedId = 0;
 
-        const responseEmailExists = await db.query(`SELECT id_user, name, email, password
-            FROM challenge.user 
-            WHERE email = :email  `, {
-            type: db.QueryTypes.SELECT,
-            replacements: {
-                email: body.email
-            }
-        })
+        const responseEmailExists = await db.query(
+            `SELECT id_user, name, email
+                FROM challenge.user 
+                WHERE email = :email  `,
+            {
+                type: db.QueryTypes.SELECT,
+                replacements: {
+                    email: body.email
+                }
+            })
 
         const user = responseEmailExists[0];
 
@@ -71,10 +78,10 @@ exports.store = async (req, res) => {
 
         } else {
 
-            let response = await db.query(`INSERT INTO challenge.user (name, email, password, id_rol)
-                                            VALUES (:name, :email, :password, :id_rol) 
-                                            RETURNING id_user
-                                        `,
+            let response = await db.query(
+                `INSERT INTO challenge.user (name, email, password, id_rol)
+                        VALUES (:name, :email, :password, :id_rol) 
+                        RETURNING id_user `,
                 {
                     type: db.QueryTypes.INSERT,
                     replacements: {
@@ -112,15 +119,18 @@ exports.store = async (req, res) => {
 
 exports.show = async (req, res) => {
     try {
-        const { params } = req;
+        const { body } = req;
 
-        const response = await db.query(`SELECT id_user, name, email, password, id_rol
-                                        FROM challenge.user WHERE id_user = :id`, {
-            type: db.QueryTypes.SELECT,
-            replacements: {
-                id: params.id
-            }
-        })
+        const response = await db.query(
+            ` SELECT id_user, name, email, password, id_rol
+                FROM challenge.user 
+                WHERE id_user = :id`,
+            {
+                type: db.QueryTypes.SELECT,
+                replacements: {
+                    id: body.id_user
+                }
+            })
 
         res.json({
             "message": {},
@@ -155,11 +165,13 @@ exports.update = async (req, res) => {
         const { body } = req;
 
         await db.query(
-            `UPDATE challenge.user SET name = :name, email= :email WHERE id_user = :id_user`,
+            `UPDATE challenge.user SET name = :name, email= :email, id_rol = :id_rol
+                WHERE id_user = :id_user`,
             {
                 type: db.QueryTypes.UPDATE,
                 replacements: {
                     id_user: body.id_user,
+                    id_rol: body.id_rol,
                     name: body.name,
                     email: body.email
                 }
@@ -168,7 +180,7 @@ exports.update = async (req, res) => {
 
 
         res.json({
-            "message": { "updated_id": params.id_user },
+            "message": { "updated_id": body.id_user },
             "error_message": {},
             "status": true
         });
@@ -195,10 +207,10 @@ exports.delete = async (req, res) => {
         await db.transaction(async (t) => {
 
             //  delete comments
-            await db.query(` DELETE FROM challenge.comment
-                                WHERE id_post IN
-                                ( SELECT id_post FROM challenge.post WHERE id_user = :id)
-                `,
+            await db.query(
+                ` DELETE FROM challenge.comment                    
+                        WHERE id_post IN
+                        ( SELECT id_post FROM challenge.post WHERE id_user = :id) `,
                 {
                     type: db.QueryTypes.DELETE,
                     replacements: {
@@ -261,7 +273,7 @@ exports.login = async (req, res) => {
 
         const { body } = req;
 
-        const response = await db.query(`SELECT id_user, name, email, password
+        const response = await db.query(`SELECT id_user, name, email, password, id_rol
                                             FROM challenge.user 
                                             WHERE email = :email  `, {
             type: db.QueryTypes.SELECT,
@@ -280,7 +292,8 @@ exports.login = async (req, res) => {
 
                 const token = jwt.sign({
                     name: user.name,
-                    id: user.id_user
+                    id: user.id_user,
+                    id_rol: user.id_rol
                 }, process.env.TOKEN_SECRET, {
                     expiresIn: '100d'
                 })
