@@ -24,7 +24,6 @@ exports.index = async (req, res) => {
 
     }
     catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
@@ -122,7 +121,7 @@ exports.show = async (req, res) => {
         const { body } = req;
 
         const response = await db.query(
-            ` SELECT id_user, name, email, password, id_rol
+            ` SELECT id_user, name, email, id_rol
                 FROM challenge.user 
                 WHERE id_user = :id`,
             {

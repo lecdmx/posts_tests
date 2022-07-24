@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
@@ -109,32 +109,23 @@
 <a name='L44'></a><a href='#L44'>44</a>
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -145,8 +136,35 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -160,36 +178,46 @@ const router = express.Router();
 const { check } = require("express-validator");
 const usersController = require('../controllers/usersController');
 const { verifyToken } = require('../middleware/authentication');
-&nbsp;
-router.get('/users', usersController.index);
+const { verifyIsAdmin } = require('../middleware/authentication');
 &nbsp;
 router.post('/users',
+    [
+        check('id_user_loged').not().isEmpty().withMessage('id_user_loged is a required parameter'),
+        check('id_user_loged').isNumeric().withMessage('id_user_loged must be a number')
+    ],
+    verifyToken, verifyIsAdmin, usersController.index);
+&nbsp;
+router.post('/saveUser',
     [
         check('name').not().isEmpty().withMessage('name is a required parameter'),
         check('email').not().isEmpty().withMessage('email is a required parameter'),
         check('email').isEmail().withMessage('email must be a valid email address'),
-        check('id_rol').not().isEmpty().withMessage('id_rol is a required parameter'),
-        check('id_rol').isNumeric().withMessage('id_post must be a number')
+        check('id_user_loged').not().isEmpty().withMessage('id_user_loged is a required parameter'),
+        check('id_user_loged').isNumeric().withMessage('id_user_loged must be a number')
     ],
-    verifyToken,
-    usersController.store);
+    verifyToken, verifyIsAdmin, usersController.store);
 &nbsp;
-router.get('/users/:id', usersController.show);
+router.post('/getUser',
+    [
+        check('id_user_loged').not().isEmpty().withMessage('id_user_loged is a required parameter'),
+        check('id_user_loged').isNumeric().withMessage('id_user_loged must be a number'),
+        check('id_user').not().isEmpty().withMessage('id_user is a required parameter'),
+        check('id_user').isNumeric().withMessage('id_user must be a number')
+    ],
+    verifyToken, verifyIsAdmin, usersController.show);
 &nbsp;
 router.put('/users',
     [
         check('name').not().isEmpty().withMessage('name is a required parameter'),
         check('email').not().isEmpty().withMessage('email is a required parameter'),
         check('email').isEmail().withMessage('email must be a valid email address'),
-        check('id_rol').not().isEmpty().withMessage('id_rol is a required parameter'),
-        check('id_rol').isNumeric().withMessage('id_post must be a number')
+        check('id_user_loged').not().isEmpty().withMessage('id_user_loged is a required parameter'),
+        check('id_user_loged').isNumeric().withMessage('id_user_loged must be a number')
     ],
-    verifyToken,
-    usersController.update);
+    verifyToken, verifyIsAdmin, usersController.update);
 &nbsp;
 router.delete('/users/:id',
-    verifyToken,
-    usersController.delete);
+    verifyToken, verifyIsAdmin, usersController.delete);
 &nbsp;
 router.post('/login',
     [
@@ -197,7 +225,6 @@ router.post('/login',
         check('email').isEmail().withMessage('email must be a valid email address'),
         check('password').not().isEmpty().withMessage('name is a required parameter')
     ],
-    verifyToken,
     usersController.login);
 &nbsp;
 &nbsp;
@@ -208,7 +235,7 @@ module.exports = router;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-07-23T20:13:29.589Z
+                at 2022-07-24T17:00:52.464Z
             </div>
         <script src="../prettify.js"></script>
         <script>

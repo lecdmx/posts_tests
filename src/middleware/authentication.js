@@ -34,8 +34,6 @@ exports.verifyToken = async (req, res, next) => {
 
     } else {
 
-        console.log(`JSON: ${JSON.stringify(decodedToken)}`);
-
         next();
 
     }
@@ -53,7 +51,6 @@ exports.verifyIsAdmin = async (req, res, next) => {
             throw ({ message: errors.array() });
 
         const { body } = req;
-        console.log(`body ${JSON.stringify(body)}`);
 
         let response = await db.query(
             ` SELECT r.id_rol 	
@@ -68,8 +65,6 @@ exports.verifyIsAdmin = async (req, res, next) => {
                     id_rol: constants.USER_TYPE.ADMIN
                 }
             })
-
-        console.log(`${JSON.stringify(response)}`);
 
         if (!response || response.length === 0) {
 
@@ -87,7 +82,6 @@ exports.verifyIsAdmin = async (req, res, next) => {
 
     }
     catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
@@ -147,7 +141,6 @@ exports.verifyHavePermissionDeleteComments = async (req, res, next) => {
 
     }
     catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
@@ -168,7 +161,6 @@ exports.verifyHavePermissionDeleteComments = async (req, res, next) => {
             throw ({ message: errors.array() });
 
         const { body } = req;
-        console.log(`body ${JSON.stringify(body)}`);
 
         let response = await db.query(
             ` SELECT rel.id_permission
