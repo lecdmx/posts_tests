@@ -9,13 +9,15 @@ const { validationAuthentication,
     validationUsers,
     validationGetUser,
     validationUpdateUser,
+    validationDeleteUser,
     validationAddUser } = require('./src/users.test');
+
+const {
+    validationAddPermission } = require('./src/permissions.test');
 
 
 // Validate login
 describe('Test endpoint /login', () => {
-
-    console.log(`validationAuthentication ${JSON.stringify(validationAuthentication)}`);
 
     for (const i in validationAuthentication) {
         it(validationAuthentication[i].label, async () => {
@@ -90,6 +92,7 @@ describe('Test endpoint USERS /saveUser', () => {
                 .set('Authorization', validToken)
                 .expect(200)
                 .expect((res) => {
+                    expect(res.body.status).toBe(validationAddUser[i].response.status)
                 })
         })
 
@@ -104,8 +107,29 @@ describe('Test endpoint USERS update /users', () => {
         it(validationUpdateUser[i].label, async () => {
 
             await request(app)
-                .post('/users')
+                .put('/users')
                 .send(validationUpdateUser[i].test)
+                .expect('Content-Type', /json/)
+                .set('Accept', 'application/json')
+                .set('Authorization', validToken)
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body.status).toBe(validationUpdateUser[i].response.status)
+                })
+        })
+
+    }
+
+})
+
+describe('Test endpoint USERS delete /users', () => {
+
+    for (const i in validationDeleteUser) {
+        it(validationDeleteUser[i].label, async () => {
+
+            await request(app)
+                .delete('/users/37')
+                .send(validationDeleteUser[i].test)
                 .expect('Content-Type', /json/)
                 .set('Accept', 'application/json')
                 .set('Authorization', validToken)
@@ -118,6 +142,49 @@ describe('Test endpoint USERS update /users', () => {
 
 })
 
+
+
+describe('Test endpoint PERMISSIONS update /permissions', () => {
+
+    for (const i in validationAddPermission) {
+        it(validationAddPermission[i].label, async () => {
+
+            await request(app)
+                .post('/permissions')
+                .send(validationAddPermission[i].test)
+                .expect('Content-Type', /json/)
+                .set('Accept', 'application/json')
+                .set('Authorization', validToken)
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body.status).toBe(validationAddPermission[i].response.status)
+                })
+        })
+
+    }
+
+})
+
+describe('Test endpoint PERMISSIONS delete /permissions', () => {
+
+    for (const i in validationAddPermission) {
+        it(validationAddPermission[i].label, async () => {
+
+            await request(app)
+                .post('/permissions')
+                .send(validationAddPermission[i].test)
+                .expect('Content-Type', /json/)
+                .set('Accept', 'application/json')
+                .set('Authorization', validToken)
+                .expect(200)
+                .expect((res) => {
+                    expect(res.body.status).toBe(validationAddPermission[i].response.status)
+                })
+        })
+
+    }
+
+})
 
 describe('Test endpoint POSTS /postsbydate', () => {
 

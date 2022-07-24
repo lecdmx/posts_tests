@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 exports.index = async (req, res) => {
 
     try {
-      
+
         const response = await db.query(
             `SELECT id_user, name, email, id_rol            
                 FROM challenge.user 
@@ -40,17 +40,19 @@ exports.index = async (req, res) => {
 exports.store = async (req, res) => {
 
     try {
-        
-        console.log('users.store');
 
         const errors = validationResult(req);
         if (!errors.isEmpty())
-            throw ({ message: errors.array() });
+            throw (
+                res.json({
+                    "message": {},
+                    "error_message": errors.array(),
+                    "status": false
+                })
+            )
 
 
         const { body } = req;
-
-        let generatedId = 0;
 
         const responseEmailExists = await db.query(
             `SELECT id_user, name, email
@@ -75,7 +77,7 @@ exports.store = async (req, res) => {
 
         } else {
 
-            let response = await db.query(
+            await db.query(
                 `INSERT INTO challenge.user (name, email, password, id_rol)
                         VALUES (:name, :email, :password, :id_rol) 
                         RETURNING id_user `,
@@ -89,10 +91,9 @@ exports.store = async (req, res) => {
                     }
                 });
 
-            generatedId = response[0][0].id_user;
 
             res.json({
-                "message": { "generated_id": generatedId },
+                "message": "New user added successfully.",
                 "error_message": {},
                 "status": true
             });
@@ -325,7 +326,7 @@ exports.login = async (req, res) => {
 
         res.json({
             "message": {},
-            "error_message": (error.message) ? error.message : "General error",
+            "error_message": error.message,
             "status": false
         });
     }

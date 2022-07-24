@@ -12,17 +12,39 @@ exports.store = async (req, res) => {
 
         const { body } = req;
 
-        await db.query(
-            `INSERT INTO challenge.rel_user_permission (id_user, id_permission)
-                    VALUES (:id_user, :id_permission)                                        
+        await db.transaction(async (t) => {
+
+            let response = await db.query(
+                `SELECT id_user FROM challenge.rel_user_permission
+                    WHERE id_user = :id_user 
+                    AND id_permission = :id_permission
                 `,
-            {
-                type: db.QueryTypes.INSERT,
-                replacements: {
-                    id_user: body.id_user,
-                    id_permission: body.id_permission,
-                }
-            })
+                {
+                    type: db.QueryTypes.SELECT,
+                    replacements: {
+                        id_user: body.id_user,
+                        id_permission: body.id_permission,
+                    }
+                }, { transaction: t });
+
+
+            if (response.length === 0) {
+
+                await db.query(
+                    `INSERT INTO challenge.rel_user_permission (id_user, id_permission)
+                        VALUES (:id_user, :id_permission)                                        
+                    `,
+                    {
+                        type: db.QueryTypes.INSERT,
+                        replacements: {
+                            id_user: body.id_user,
+                            id_permission: body.id_permission,
+                        }
+                    }, { transaction: t });
+            }
+
+        });
+
 
         res.json({
             "message": { "asignated_id": body.id_permission },

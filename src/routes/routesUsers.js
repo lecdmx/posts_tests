@@ -42,7 +42,11 @@ router.put('/users',
     verifyToken, verifyIsAdmin, usersController.update);
 
 router.delete('/users/:id',
-    verifyToken, verifyIsAdmin, usersController.delete);
+    [
+        check('id_user_loged').not().isEmpty().withMessage('id_user_loged is a required parameter'),
+        check('id_user_loged').isNumeric().withMessage('id_user_loged must be a number')
+    ]
+    , verifyToken, verifyIsAdmin, usersController.delete);
 
 router.post('/login',
     [

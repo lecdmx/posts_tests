@@ -2,6 +2,18 @@
 
 exports.validationAuthentication = [
   {
+    label: 'Test: Validate missing params',
+    test: {
+      "email": "colorados_@dos.com"
+    },
+    response: {
+      "message": "Login failed",
+      "error_message": "User not found",
+      "status": false,
+      "login": false
+    }
+  },
+  {
     label: 'Test: Validate login error',
     test: {
       "email": "colorados_@dos.com",
@@ -33,7 +45,7 @@ exports.validationAuthentication = [
 exports.validationUsers = [
 
   {
-    label: 'Test: Validate missig params',
+    label: 'Test: Validate missing params',
     test: {
     },
     response: [
@@ -121,7 +133,7 @@ exports.validationUsers = [
 exports.validationGetUser = [
 
   {
-    label: 'Test: Validate missig params',
+    label: 'Test: Validate missing params',
     test: {
       "id_user_loged": 35
     },
@@ -179,7 +191,7 @@ exports.validationGetUser = [
 exports.validationAddUser = [
 
   {
-    label: 'Test: Validate missig params',
+    label: 'Test: Validate missing params',
     test: {
       "name": "x4",
       "password": "x4",
@@ -208,9 +220,9 @@ exports.validationAddUser = [
   {
     label: 'Test: Add new user successfully',
     test: {
-      "name": "x6",
-      "email": "x6@addika.com",
-      "password": "x6",
+      "name": "x7",
+      "email": `_${Math.round(Math.random() * 1000 + 1)}@challengeaddika.com`,
+      "password": "x7",
       "id_rol": 2,
       "id_user_loged": 35
     },
@@ -226,9 +238,9 @@ exports.validationAddUser = [
   {
     label: 'Test: Fail on add new user',
     test: {
-      "name": "x6",
-      "email": "x6@addika.com",
-      "password": "x6",
+      "name": "x7",
+      "email": "x7@addika.com",
+      "password": "x7",
       "id_rol": 2,
       "id_user_loged": 35
     },
@@ -237,7 +249,7 @@ exports.validationAddUser = [
         "generated_id": 38
       },
       "error_message": {},
-      "status": true
+      "status": false
     }
   },
 
@@ -248,9 +260,8 @@ exports.validationAddUser = [
 exports.validationUpdateUser = [
 
   {
-    label: 'Test: Validate missig params',
+    label: 'Test: Validate missing params',
     test: {
-      "name": "usuarioest2",
       "id_rol": 2,
       "id_user_loged": 35,
       "id_user": 34
@@ -274,40 +285,69 @@ exports.validationUpdateUser = [
   },
 
 
-  // {
-  //   label: 'Test: Add new user successfully',
-  //   test: {
-  //     "name": "x6",
-  //     "email": "x6@addika.com",
-  //     "password": "x6",
-  //     "id_rol": 2,
-  //     "id_user_loged": 35
-  //   },
-  //   response: {
-  //     "message": {
-  //       "generated_id": 38
-  //     },
-  //     "error_message": {},
-  //     "status": true
-  //   }
-  // },
+  {
+    label: 'Test: Update user successfully',
+    test: {
+      "name": "usuarioest2",
+      "email": "usuarioest2@addika.com",
+      "id_rol": 2,
+      "id_user_loged": 35,
+      "id_user": 34
+    },
+    response: {
+      "message": {
+        "generated_id": 38
+      },
+      "error_message": {},
+      "status": true
+    }
+  },
 
-  // {
-  //   label: 'Test: Fail on add new user',
-  //   test: {
-  //     "name": "x6",
-  //     "email": "x6@addika.com",
-  //     "password": "x6",
-  //     "id_rol": 2,
-  //     "id_user_loged": 35
-  //   },
-  //   response: {
-  //     "message": {
-  //       "generated_id": 38
-  //     },
-  //     "error_message": {},
-  //     "status": true
-  //   }
-  // },
+]
+
+
+exports.validationDeleteUser = [
+  {
+    label: 'Test: Validate missing params',
+    test: {
+    },
+    response: {
+      "message": {},
+      "error_message":  [
+        {
+          "msg": "id_user_loged is a required parameter",
+          "param": "id_user_loged",
+          "location": "body"
+        },
+        {
+          "msg": "id_user_loged must be a number",
+          "param": "id_user_loged",
+          "location": "body"
+        }
+      ],
+      "status": false
+    }
+  },
+
+
+  {
+    label: 'Test: Delete user successfully',
+    test: {
+      "name": "usuarioest2",
+      "email": "usuarioest2@addika.com",
+      "id_rol": 2,
+      "id_user_loged": 35,
+      "id_user": 34
+    },
+    response: {
+      "message": {
+        "generated_id": 38
+      },
+      "error_message": {},
+      "status": true
+    }
+  },
+
+
 
 ]
