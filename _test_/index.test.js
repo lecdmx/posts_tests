@@ -20,6 +20,7 @@ const { validationAuthentication,
   validationGetUser,
   validationUpdateUser,
   validationDeleteUser,
+  validationGetUsersTokenInvalid,
   validationAddUser } = require('./src/users.test');
 
 
@@ -102,6 +103,20 @@ describe('Test endpoint USERS /users', () => {
     })
 
   }
+
+  it(validationGetUsersTokenInvalid.label, async () => {
+
+    await request(app)
+      .post('/users')
+      .send(validationGetUsersTokenInvalid.test)
+      .expect('Content-Type', /json/)
+      .set('Accept', 'application/json')
+      .set('Authorization', 'Bear asdasdasd')
+      .expect(200)
+      .expect((res) => {
+      })
+  })
+
 })
 
 describe('Test endpoint USERS /getUser', () => {

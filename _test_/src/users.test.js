@@ -127,9 +127,24 @@ exports.validationUsers = [
     ],
     "status": true
   },
+
 ]
 
-
+exports.validationGetUsersTokenInvalid =
+{
+  label: 'Test: Token missing or invalid',
+  test: {
+    "id_user_loged": 35
+  },
+  response: [
+    {
+      "message": {},
+      "error_message": "Token missing or invalid",
+      "status": false
+    }
+  ],
+  "status": false
+}
 
 exports.validationGetUser = [
 

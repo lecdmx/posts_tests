@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.36% </span>
+                <span class="strong">98.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>60/61</span>
+                <span class='fraction'>59/60</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.75% </span>
+                <span class="strong">96.87% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>30/32</span>
+                <span class='fraction'>31/32</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.36% </span>
+                <span class="strong">98.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>60/61</span>
+                <span class='fraction'>59/60</span>
             </div>
         
             
@@ -336,11 +336,7 @@
 <a name='L271'></a><a href='#L271'>271</a>
 <a name='L272'></a><a href='#L272'>272</a>
 <a name='L273'></a><a href='#L273'>273</a>
-<a name='L274'></a><a href='#L274'>274</a>
-<a name='L275'></a><a href='#L275'>275</a>
-<a name='L276'></a><a href='#L276'>276</a>
-<a name='L277'></a><a href='#L277'>277</a>
-<a name='L278'></a><a href='#L278'>278</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L274'></a><a href='#L274'>274</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -348,29 +344,25 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">44x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">44x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">44x</span>
 <span class="cline-any cline-yes">43x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">43x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">43x</span>
+<span class="cline-any cline-yes">44x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">43x</span>
-<span class="cline-any cline-yes">43x</span>
+<span class="cline-any cline-yes">44x</span>
+<span class="cline-any cline-yes">44x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">43x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">43x</span>
-<span class="cline-any cline-yes">43x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">44x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">43x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -625,15 +617,13 @@ const { validationResult } = require("express-validator");
 &nbsp;
 exports.verifyToken = async (req, res, next) =&gt; {
 &nbsp;
-    const { body } = req;
-&nbsp;
     const authorization = req.get('authorization');
 &nbsp;
     let token = '';
 &nbsp;
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (authorization &amp;&amp; authorization.toLowerCase().startsWith('bearer')) {
+    if (authorization &amp;&amp; authorization.toLowerCase().startsWith('bearer')) {
         token = authorization.split(' ')[1];
-    }
+    } 
 &nbsp;
     let decodedToken = {};
 &nbsp;
@@ -642,9 +632,7 @@ exports.verifyToken = async (req, res, next) =&gt; {
     } catch (error) {
         console.log(Error);
     }
-    // console.log(`body JSON: ${JSON.stringify(body)}`);
-    // const isSameUser = Number(decodedToken.id) === Number(body.id_user);
-    // console.log(`!decodedToken.id === body.id_user : ${isSameUser}`);
+&nbsp;
     if (!token || !decodedToken.id) {
 &nbsp;
         res.json({
@@ -901,7 +889,7 @@ exports.verifyHavePermissionCreateDeleteGETPOSTS = async (req, res, next) =&gt; 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-07-25T15:26:46.555Z
+                at 2022-07-25T15:54:19.035Z
             </div>
         <script src="../prettify.js"></script>
         <script>

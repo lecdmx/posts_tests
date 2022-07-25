@@ -6,15 +6,13 @@ const { validationResult } = require("express-validator");
 
 exports.verifyToken = async (req, res, next) => {
 
-    const { body } = req;
-
     const authorization = req.get('authorization');
 
     let token = '';
 
     if (authorization && authorization.toLowerCase().startsWith('bearer')) {
         token = authorization.split(' ')[1];
-    }
+    } 
 
     let decodedToken = {};
 
@@ -23,9 +21,7 @@ exports.verifyToken = async (req, res, next) => {
     } catch (error) {
         console.log(Error);
     }
-    // console.log(`body JSON: ${JSON.stringify(body)}`);
-    // const isSameUser = Number(decodedToken.id) === Number(body.id_user);
-    // console.log(`!decodedToken.id === body.id_user : ${isSameUser}`);
+
     if (!token || !decodedToken.id) {
 
         res.json({
