@@ -121,7 +121,7 @@ exports.store = async (req, res) => {
                     replacements: {
                         id_user: body.id_user_loged,
                         id_post: generatedPostId,
-                        content: `User ${body.id_user} created Post ${generatedPostId}`
+                        content: `User ${body.id_user_loged} created Post ${generatedPostId}`
                     }
                 }, { transaction: t });
 

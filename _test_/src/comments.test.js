@@ -126,8 +126,24 @@ exports.validationAddNewComment = [
   {
     label: 'Validation: Add new comment successfully',
     test: {
-      "id_post": "35",
+      "id_post": 35,
       "comment": "Comentario 3 en post 1"
+    },
+    response: {
+      "message": {
+        "generated_id": 27
+      },
+      "error_message": {},
+      "status": true
+    }
+  },
+  {
+    label: 'Validation: Add new comment successfully with comment parent',
+    test: {
+      "id_post": 35,
+      "id_user": 35,
+      "comment": "Comentario 3 en post 1",
+      "id_comment_parent": 35
     },
     response: {
       "message": {

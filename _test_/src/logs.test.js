@@ -1,7 +1,7 @@
 
 exports.validationGetAllLogsMissingsParams = [
     {
-        label: 'Validation: Missins params',
+        label: 'Validation: Missings params',
         test: {
         },
         response: {

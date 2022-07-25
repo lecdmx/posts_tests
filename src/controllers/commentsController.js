@@ -220,17 +220,9 @@ exports.update = async (req, res) => {
 
 
 exports.delete = async (req, res) => {
+
     try {
-
-        const errors = validationResult(req);
-        if (!errors.isEmpty())
-            throw ({
-                "message": {},
-                "error_message": errors.array(),
-                "status": false
-            })
-
-
+     
         const { body } = req
 
         await db.transaction(async (t) => {
@@ -258,7 +250,7 @@ exports.delete = async (req, res) => {
 
 
         res.json({
-            "message": { "deleted_id": body.id },
+            "message": { "deleted_id": body.id_comment },
             "error_message": {},
             "status": true
         });
