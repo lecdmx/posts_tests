@@ -1,4 +1,4 @@
-exports.validationAuthentication = [
+exports.validationAuthenticationMissingsParams = [
   {
     label: 'Test: Validate missing params',
     test: {
@@ -10,7 +10,9 @@ exports.validationAuthentication = [
       "status": false,
       "login": false
     }
-  },
+  }]
+
+exports.validationAuthentication = [
   {
     label: 'Test: Validate login error',
     test: {
@@ -35,7 +37,8 @@ exports.validationAuthentication = [
       "results": {
         "token": "eyJhbG..."
       },
-      "status": true
+      "status": true,
+      "login": true
     }
   },
 ]
@@ -311,7 +314,7 @@ exports.validationDeleteUser = [
     },
     response: {
       "message": {},
-      "error_message":  [
+      "error_message": [
         {
           "msg": "id_user_loged is a required parameter",
           "param": "id_user_loged",

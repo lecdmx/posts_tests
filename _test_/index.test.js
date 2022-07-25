@@ -15,6 +15,7 @@ const { validationGetPostsByDate,
   validationAddNewPostOk } = require('./src/posts.test');
 
 const { validationAuthentication,
+  validationAuthenticationMissingsParams,
   validationUsers,
   validationGetUser,
   validationUpdateUser,
@@ -57,6 +58,24 @@ describe('Test endpoint /login', () => {
         .expect(200)
         .expect((res) => {
           expect(res.body.status).toBe(validationAuthentication[i].response.status)
+          expect(res.body.login).toBe(validationAuthentication[i].response.login)
+        })
+    })
+
+  }
+
+  for (const i in validationAuthenticationMissingsParams) {
+    it(validationAuthenticationMissingsParams[i].label, async () => {
+
+      await request(app)
+        .post('/login')
+        .send(validationAuthenticationMissingsParams[i].test)
+        .expect('Content-Type', /json/)
+        .set('Accept', 'application/json')
+        .set('Authorization', validToken)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.status).toBe(validationAuthenticationMissingsParams[i].response.status)
         })
     })
 
@@ -215,12 +234,13 @@ describe('Test endpoint POSTS /posts', () => {
 
     it(validationPosts[i].label, async () => {
       await request(app)
-        .post('/posts')
+        .get('/posts')
         .send(validationPosts[i].test)
         .expect('Content-Type', /json/)
         .set('Accept', 'application/json')
         .expect(200)
         .expect((res) => {
+          expect(res.body.status).toBe(validationPosts[i].response.status)
         })
     })
 

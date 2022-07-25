@@ -41,15 +41,6 @@ exports.store = async (req, res) => {
 
     try {
 
-        const errors = validationResult(req);
-        if (!errors.isEmpty())
-            throw ({
-                "message": {},
-                "error_message": errors.array(),
-                "status": false
-            })
-
-
         const { body } = req;
 
         const responseEmailExists = await db.query(
@@ -151,15 +142,6 @@ exports.show = async (req, res) => {
 
 exports.update = async (req, res) => {
     try {
-
-        const errors = validationResult(req);
-        if (!errors.isEmpty())
-            throw ({
-                "message": {},
-                "error_message": errors.array(),
-                "status": false
-            })
-
 
         const { body } = req;
 
@@ -303,7 +285,8 @@ exports.login = async (req, res) => {
                 res.header('auth-token', token).json({
                     "error_message": {},
                     "results": { token },
-                    "status": true
+                    "status": true,
+                    "login": true
                 });
 
             } else {
@@ -312,7 +295,7 @@ exports.login = async (req, res) => {
                     "message": "Login failed",
                     "error_message": "User not found",
                     "status": false,
-                    login: false
+                    "login": false
                 });
 
 
@@ -324,7 +307,7 @@ exports.login = async (req, res) => {
                 "message": "Login failed",
                 "error_message": "User not found",
                 "status": false,
-                login: false
+                "login": false
             });
 
         }

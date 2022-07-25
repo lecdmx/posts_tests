@@ -4,6 +4,7 @@ const { validationResult } = require("express-validator");
 exports.index = async (req, res) => {
 
     try {
+
         const response = await db.query(
             `SELECT id_post, creation_date, to_char(creation_date, 'DD/MM/YYYY') as creation_date_formated,
                 DATE_PART('day', current_timestamp-creation_date) as days,
@@ -35,21 +36,13 @@ exports.index = async (req, res) => {
             "error_message": error,
             "status": false
         });
-
     }
 
 };
 
+
 exports.getPostsByDate = async (req, res) => {
     try {
-
-        const errors = validationResult(req);
-        if (!errors.isEmpty())
-            throw ({
-                "message": {},
-                "error_message": errors.array(),
-                "status": false
-            })
 
         const { body } = req;
 
@@ -99,15 +92,6 @@ exports.getPostsByDate = async (req, res) => {
 exports.store = async (req, res) => {
 
     try {
-
-        const errors = validationResult(req);
-        if (!errors.isEmpty())
-            throw ({
-                "message": {},
-                "error_message": errors.array(),
-                "status": false
-            })
-
 
         const { body } = req;
 
@@ -205,15 +189,6 @@ exports.delete = async (req, res) => {
 
     try {
 
-        const errors = validationResult(req);
-        if (!errors.isEmpty())
-            throw ({
-                "message": {},
-                "error_message": errors.array(),
-                "status": false
-            })
-
-
         const { body } = req;
 
         await db.transaction(async (t) => {
@@ -274,15 +249,6 @@ exports.delete = async (req, res) => {
 exports.update = async (req, res) => {
 
     try {
-
-        const errors = validationResult(req);
-        if (!errors.isEmpty())
-            throw ({
-                "message": {},
-                "error_message": errors.array(),
-                "status": false
-            })
-
 
         const { body } = req;
 
