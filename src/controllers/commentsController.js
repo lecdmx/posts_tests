@@ -4,10 +4,11 @@ const { validationResult } = require("express-validator");
 exports.index = async (req, res) => {
 
     try {
-        const response = await db.query(`SELECT id_comment, comment, id_comment_parent, 
-                                            id_post, creation_date, to_char(creation_date, 'DD/MM/YYYY') as creation_date_formated
-                                            FROM challenge.comment 
-                                        `,
+        const response = await db.query(
+            `SELECT id_comment, comment, id_comment_parent, 
+                id_post, creation_date, to_char(creation_date, 'DD/MM/YYYY') as creation_date_formated
+                FROM challenge.comment 
+            `,
             {
                 type: db.QueryTypes.SELECT
             })
@@ -21,7 +22,6 @@ exports.index = async (req, res) => {
 
     }
     catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
@@ -49,12 +49,13 @@ exports.getCommentsByPost = async (req, res) => {
 
         const { body } = req;
 
-        const response = await db.query(`SELECT id_comment, comment, id_comment_parent, 
-                                            id_post, creation_date, to_char(creation_date, 'DD/MM/YYYY') as creation_date_formated
-                                            FROM challenge.comment 
-                                            WHERE id_post = :id_post
-                                            ORDER BY creation_date
-                                        `,
+        const response = await db.query(
+            `SELECT id_comment, comment, id_comment_parent, 
+                id_post, creation_date, to_char(creation_date, 'DD/MM/YYYY') as creation_date_formated
+                FROM challenge.comment 
+                WHERE id_post = :id_post
+                ORDER BY creation_date
+            `,
             {
                 type: db.QueryTypes.SELECT,
                 replacements: {
@@ -75,7 +76,7 @@ exports.getCommentsByPost = async (req, res) => {
         res.json({
             "message": {},
             "results": [],
-            "error_message": error.message,
+            "error_message": error,
             "status": false
         });
 
@@ -100,10 +101,11 @@ exports.store = async (req, res) => {
 
         console.log(`${body.id_comment_parent}`);
 
-        const response = await db.query(`INSERT INTO challenge.comment (comment, id_comment_parent, id_post, creation_date, id_user)
-                                            VALUES (:comment, :id_comment_parent, :id_post, current_timestamp, :id_user)
-                                            RETURNING id_comment
-                                        `,
+        const response = await db.query(
+            `INSERT INTO challenge.comment (comment, id_comment_parent, id_post, creation_date, id_user)            
+                VALUES (:comment, :id_comment_parent, :id_post, current_timestamp, :id_user)            
+                RETURNING id_comment            
+            `,
             {
                 type: db.QueryTypes.INSERT,
                 replacements: {
@@ -124,11 +126,10 @@ exports.store = async (req, res) => {
 
     }
     catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
-            "error_message": error.message,
+            "error_message": error,
             "status": false
         });
 
@@ -141,8 +142,11 @@ exports.show = async (req, res) => {
     try {
         const { params } = req;
 
-        const response = await db.query(`SELsECT id_comment, comment, id_comment_parent, id_post, creation_date, to_char(creation_date, 'DD/MM/YYYY') as creation_date_formated
-                                        FROM challenge.comment WHERE id_comment = :id`, {
+        const response = await db.query(
+            `SELECT id_comment, comment, id_comment_parent, id_post, creation_date, 
+                to_char(creation_date, 'DD/MM/YYYY') as creation_date_formated
+                FROM challenge.comment WHERE id_comment = :id
+            `, {
             type: db.QueryTypes.SELECT,
             replacements: {
                 id: params.id
@@ -158,12 +162,11 @@ exports.show = async (req, res) => {
 
     }
     catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
             "results": [],
-            "error_message": error.message,
+            "error_message": error,
             "status": false
         });
 
@@ -187,30 +190,28 @@ exports.update = async (req, res) => {
         const { body } = req;
 
         await db.query(
-            `UPDATE challenge.comment SET comment = :comment, 
+            `UPDATE challenge.comment SET comment = :comment
                 WHERE id_comment = :id_comment`,
             {
                 type: db.QueryTypes.UPDATE,
                 replacements: {
                     id_comment: body.id_comment,
-                    comment: body.comment,
-                    id_comment_parent: body.id_comment_parent
+                    comment: body.comment
                 }
             }
         )
 
         res.json({
-            "message": { "updated_id": params.id_user },
+            "message": { "updated_id": body.id_comment },
             "error_message": {},
             "status": true
         });
 
     } catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
-            "error_message": error.message,
+            "error_message": error,
             "status": false
         });
 
@@ -266,7 +267,7 @@ exports.delete = async (req, res) => {
 
         res.json({
             "message": {},
-            "error_message": error.message,
+            "error_message": error,
             "status": false
         });
     }

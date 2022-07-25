@@ -91,7 +91,7 @@ exports.verifyIsAdmin = async (req, res, next) => {
 
         res.json({
             "message": {},
-            "error_message": (error.message) ? error.message : "General error",
+            "error_message": error,
             "status": false
         });
 
@@ -107,10 +107,13 @@ exports.verifyHavePermissionDeleteComments = async (req, res, next) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty())
-            throw ({ message: errors.array() });
+            throw ({
+                "message": {},
+                "error_message": errors.array(),
+                "status": false
+            })
 
         const { body } = req;
-        console.log(`body ${JSON.stringify(body)}`);
 
         let response = await db.query(
             ` SELECT rel.id_permission
@@ -128,8 +131,6 @@ exports.verifyHavePermissionDeleteComments = async (req, res, next) => {
                     id_permission: constants.PERMISSIONS.DELETE_COMMENT
                 }
             })
-
-        console.log(`${JSON.stringify(response)}`);
 
         if (!response || response.length === 0) {
 
@@ -150,7 +151,7 @@ exports.verifyHavePermissionDeleteComments = async (req, res, next) => {
 
         res.json({
             "message": {},
-            "error_message": (error.message) ? error.message : "General error",
+            "error_message": error,
             "status": false
         });
 
@@ -164,7 +165,11 @@ exports.verifyHavePermissionUpdatePosts = async (req, res, next) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty())
-            throw ({ message: errors.array() });
+            throw ({
+                "message": {},
+                "error_message": errors.array(),
+                "status": false
+            })
 
         const { body } = req;
 
@@ -185,8 +190,6 @@ exports.verifyHavePermissionUpdatePosts = async (req, res, next) => {
                 }
             })
 
-        console.log(`${JSON.stringify(response)}`);
-
         if (!response || response.length === 0) {
 
             res.json({
@@ -203,11 +206,10 @@ exports.verifyHavePermissionUpdatePosts = async (req, res, next) => {
 
     }
     catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
-            "error_message": (error.message) ? error.message : "General error",
+            "error_message": error,
             "status": false
         });
 
@@ -223,10 +225,13 @@ exports.verifyHavePermissionCreateDeleteGETPOSTS = async (req, res, next) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty())
-            throw ({ message: errors.array() });
+            throw ({
+                "message": {},
+                "error_message": errors.array(),
+                "status": false
+            })
 
         const { body } = req;
-        console.log(`body ${JSON.stringify(body)}`);
 
         let response = await db.query(
             ` SELECT rel.id_permission
@@ -245,8 +250,6 @@ exports.verifyHavePermissionCreateDeleteGETPOSTS = async (req, res, next) => {
                 }
             })
 
-        console.log(`${JSON.stringify(response)}`);
-
         if (!response || response.length === 0) {
 
             res.json({
@@ -263,11 +266,10 @@ exports.verifyHavePermissionCreateDeleteGETPOSTS = async (req, res, next) => {
 
     }
     catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
-            "error_message": (error.message) ? error.message : "General error",
+            "error_message": error,
             "status": false
         });
 
