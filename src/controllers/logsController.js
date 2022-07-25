@@ -13,16 +13,21 @@ exports.index = async (req, res) => {
                 "status": false
             })
 
-
-
-        const response = await db.query(`SELECT id_log, id_user, id_post, content
-                                            FROM challenge.log 
-                                        `,
+        const response = await db.query(
+            `SELECT id_log, id_user, id_post, content                                        
+                FROM challenge.log            
+            `,
             {
                 type: db.QueryTypes.SELECT
             })
 
-        res.json(response);
+        res.json({
+            "message": {},
+            "results": response,
+            "error_message": {},
+            "status": true
+        });
+
 
     }
     catch (error) {
@@ -32,7 +37,7 @@ exports.index = async (req, res) => {
             "error_message": error.message,
             "status": false
         });
-        
+
     }
 
 };

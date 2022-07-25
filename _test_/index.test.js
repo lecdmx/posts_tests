@@ -21,9 +21,6 @@ const { validationAuthentication,
   validationDeleteUser,
   validationAddUser } = require('./src/users.test');
 
-const {
-  validationAddPermission, validationDeletePermissions } = require('./src/permissions.test');
-
 
 const { validationGetAllCommentsTokenInvalid,
   validationGetCommentsByPost,
@@ -35,6 +32,15 @@ const { validationGetAllCommentsTokenInvalid,
   validationUpdateCommentMissingsParams,
   validationUpdateCommentOk,
   validationGetAllComments } = require('./src/comments.test');
+
+
+const {
+  validationAddPermission, validationDeletePermissions } = require('./src/permissions.test');
+
+const { validationGetAllLogs,
+  validationGetAllLogsInvalidToken,
+  validationGetAllLogsInvalidPermissions,
+  validationGetAllLogsMissingsParams } = require('./src/logs.test');
 
 
 describe('Test endpoint /login', () => {
@@ -672,3 +678,79 @@ describe('Test endpoint COMMENTS update /comments', () => {
 
 
 })
+
+
+
+//  LOGS
+describe('Test endpoint LOGS post /logs', () => {
+
+  for (const i in validationGetAllLogsMissingsParams) {
+
+    it(validationGetAllLogsMissingsParams[i].label, async () => {
+      await request(app)
+        .post('/logs')
+        .send(validationGetAllLogsMissingsParams[i].test)
+        .expect('Content-Type', /json/)
+        .set('Accept', 'application/json')
+        .set('Authorization', validToken)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.status).toBe(validationGetAllLogsMissingsParams[i].response.status)
+        })
+    })
+
+  }
+
+
+  for (const i in validationGetAllLogs) {
+
+    it(validationGetAllLogs[i].label, async () => {
+      await request(app)
+        .post('/logs')
+        .send(validationGetAllLogs[i].test)
+        .expect('Content-Type', /json/)
+        .set('Accept', 'application/json')
+        .set('Authorization', validToken)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.status).toBe(validationGetAllLogs[i].response.status)
+        })
+    })
+
+  }
+
+  for (const i in validationGetAllLogsInvalidToken) {
+
+    it(validationGetAllLogsInvalidToken[i].label, async () => {
+      await request(app)
+        .post('/logs')
+        .send(validationGetAllLogsInvalidToken[i].test)
+        .expect('Content-Type', /json/)
+        .set('Accept', 'application/json')
+        .set('Authorization', invalidToken)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.status).toBe(validationGetAllLogsInvalidToken[i].response.status)
+        })
+    })
+
+  }
+
+  for (const i in validationGetAllLogsInvalidPermissions) {
+
+    it(validationGetAllLogsInvalidPermissions[i].label, async () => {
+      await request(app)
+        .post('/logs')
+        .send(validationGetAllLogsInvalidPermissions[i].test)
+        .expect('Content-Type', /json/)
+        .set('Accept', 'application/json')
+        .set('Authorization', invalidToken)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.status).toBe(validationGetAllLogsInvalidPermissions[i].response.status)
+        })
+    })
+
+  }
+
+});
