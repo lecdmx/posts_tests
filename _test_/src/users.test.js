@@ -1,5 +1,3 @@
-
-
 exports.validationAuthentication = [
   {
     label: 'Test: Validate missing params',

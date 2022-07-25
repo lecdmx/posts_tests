@@ -7,7 +7,12 @@ exports.index = async (req, res) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty())
-            throw ({ message: errors.array() });
+            throw ({
+                "message": {},
+                "error_message": errors.array(),
+                "status": false
+            })
+
 
 
         const response = await db.query(`SELECT id_log, id_user, id_post, content
@@ -21,8 +26,13 @@ exports.index = async (req, res) => {
 
     }
     catch (error) {
-        console.log(error);
-        res.json({ "Error": error });
+
+        res.json({
+            "message": {},
+            "error_message": error.message,
+            "status": false
+        });
+        
     }
 
 };

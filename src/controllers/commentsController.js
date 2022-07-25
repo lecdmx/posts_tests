@@ -26,7 +26,7 @@ exports.index = async (req, res) => {
         res.json({
             "message": {},
             "results": [],
-            "error_message": (error.message) ? error.message : "General error",
+            "error_message": error.message,
             "status": false
         });
 
@@ -40,7 +40,12 @@ exports.getCommentsByPost = async (req, res) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty())
-            throw ({ message: errors.array() });
+            throw ({
+                "message": {},
+                "error_message": errors.array(),
+                "status": false
+            })
+
 
         const { body } = req;
 
@@ -66,12 +71,11 @@ exports.getCommentsByPost = async (req, res) => {
 
     }
     catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
             "results": [],
-            "error_message": (error.message) ? error.message : "General error",
+            "error_message": error.message,
             "status": false
         });
 
@@ -85,7 +89,12 @@ exports.store = async (req, res) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty())
-            throw ({ message: errors.array() });
+            throw ({
+                "message": {},
+                "error_message": errors.array(),
+                "status": false
+            })
+
 
         const { body } = req;
 
@@ -119,7 +128,7 @@ exports.store = async (req, res) => {
 
         res.json({
             "message": {},
-            "error_message": (error.message) ? error.message : "General error",
+            "error_message": error.message,
             "status": false
         });
 
@@ -154,7 +163,7 @@ exports.show = async (req, res) => {
         res.json({
             "message": {},
             "results": [],
-            "error_message": (error.message) ? error.message : "General error",
+            "error_message": error.message,
             "status": false
         });
 
@@ -168,7 +177,12 @@ exports.update = async (req, res) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty())
-            throw ({ message: errors.array() });
+            throw ({
+                "message": {},
+                "error_message": errors.array(),
+                "status": false
+            })
+
 
         const { body } = req;
 
@@ -196,7 +210,7 @@ exports.update = async (req, res) => {
 
         res.json({
             "message": {},
-            "error_message": (error.message) ? error.message : "General error",
+            "error_message": error.message,
             "status": false
         });
 
@@ -209,7 +223,11 @@ exports.delete = async (req, res) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty())
-            throw ({ message: errors.array() });
+            throw ({
+                "message": {},
+                "error_message": errors.array(),
+                "status": false
+            })
 
 
         const { body } = req
@@ -245,11 +263,10 @@ exports.delete = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
-            "error_message": (error.message) ? error.message : "General error",
+            "error_message": error.message,
             "status": false
         });
     }

@@ -7,7 +7,12 @@ exports.store = async (req, res) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty())
-            throw ({ message: errors.array() });
+            throw ({
+                "message": {},
+                "error_message": errors.array(),
+                "status": false
+            })
+
 
 
         const { body } = req;
@@ -54,11 +59,10 @@ exports.store = async (req, res) => {
 
     }
     catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
-            "error_message": (error.message) ? error.message : "General error",
+            "error_message": error.message,
             "status": false
         });
 
@@ -92,11 +96,10 @@ exports.deletePermission = async (req, res) => {
 
 
     } catch (error) {
-        console.log(error);
 
         res.json({
             "message": {},
-            "error_message": (error.message) ? error.message : "General error",
+            "error_message": error.message,
             "status": false
         });
 
