@@ -4,17 +4,7 @@ const { validationResult } = require("express-validator");
 
 exports.store = async (req, res) => {
     try {
-
-        const errors = validationResult(req);
-        if (!errors.isEmpty())
-            throw ({
-                "message": {},
-                "error_message": errors.array(),
-                "status": false
-            })
-
-
-
+     
         const { body } = req;
 
         await db.transaction(async (t) => {
