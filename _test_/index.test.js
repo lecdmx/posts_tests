@@ -9,6 +9,9 @@ const { validationGetPostsByDate,
   validationAddNewPostMissingParams,
   validationDeletePostOk,
   validationDeletePostMissinsParams,
+  validationUpdatePostMissinsParams,
+  validationUpdatePostOk,
+  validationInvalidPermissionsToUpdatePost,
   validationAddNewPostOk } = require('./src/posts.test');
 
 const { validationAuthentication,
@@ -149,7 +152,7 @@ describe('Test endpoint USERS delete /users', () => {
 
 
 
-describe('Test endpoint PERMISSIONS update /permissions', () => {
+describe('Test endpoint PERMISSIONS /permissions', () => {
 
   for (const i in validationAddPermission) {
     it(validationAddPermission[i].label, async () => {
@@ -168,9 +171,6 @@ describe('Test endpoint PERMISSIONS update /permissions', () => {
 
   }
 
-})
-
-describe('Test endpoint PERMISSIONS delete /permissions', () => {
 
   for (const i in validationDeletePermissions) {
     it(validationDeletePermissions[i].label, async () => {
@@ -253,7 +253,7 @@ describe('Test endpoint POSTS /postsbydate', () => {
 
 
 
-describe('Test endpoint POSTS add new post missings params /posts', () => {
+describe('Test endpoint POSTS add new post  /posts', () => {
 
   for (const i in validationAddNewPostMissingParams) {
 
@@ -271,10 +271,6 @@ describe('Test endpoint POSTS add new post missings params /posts', () => {
 
   }
 
-})
-
-
-describe('Test endpoint POSTS add new post  /posts', () => {
 
   for (const i in validationAddNewPostOk) {
 
@@ -296,7 +292,7 @@ describe('Test endpoint POSTS add new post  /posts', () => {
 })
 
 
-describe('Test endpoint POSTS remove missings params /posts', () => {
+describe('Test endpoint delete /posts', () => {
 
   for (const i in validationDeletePostMissinsParams) {
 
@@ -313,11 +309,6 @@ describe('Test endpoint POSTS remove missings params /posts', () => {
     })
 
   }
-
-})
-
-
-describe('Test endpoint delete /posts', () => {
 
   for (const i in validationDeletePostOk) {
 
@@ -338,3 +329,60 @@ describe('Test endpoint delete /posts', () => {
 
 })
 
+
+describe('Test endpoint POSTS missings params update /posts', () => {
+
+  for (const i in validationUpdatePostMissinsParams) {
+
+    it(validationUpdatePostMissinsParams[i].label, async () => {
+      await request(app)
+        .put('/posts')
+        .send(validationUpdatePostMissinsParams[i].test)
+        .expect('Content-Type', /json/)
+        .set('Accept', 'application/json')
+        .set('Authorization', validToken)
+        .expect((res) => {
+          // console.log(`res.body = ${JSON.stringify(res.body)}`);
+          expect(res.body.status).toBe(validationUpdatePostMissinsParams[i].response.status)
+        })
+    })
+
+  }
+
+
+
+  for (const i in validationUpdatePostOk) {
+
+    it(validationUpdatePostOk[i].label, async () => {
+      await request(app)
+        .put('/posts')
+        .send(validationUpdatePostOk[i].test)
+        .expect('Content-Type', /json/)
+        .set('Accept', 'application/json')
+        .set('Authorization', validToken)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.status).toBe(validationUpdatePostOk[i].response.status)
+        })
+    })
+
+  }
+
+
+  for (const i in validationInvalidPermissionsToUpdatePost) {
+
+    it(validationInvalidPermissionsToUpdatePost[i].label, async () => {
+      await request(app)
+        .put('/posts')
+        .send(validationInvalidPermissionsToUpdatePost[i].test)
+        .expect('Content-Type', /json/)
+        .set('Accept', 'application/json')
+        .set('Authorization', validToken)
+        .expect((res) => {
+          expect(res.body.status).toBe(validationInvalidPermissionsToUpdatePost[i].response.status)
+        })
+    })
+
+  }
+
+})

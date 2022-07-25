@@ -158,7 +158,7 @@ exports.verifyHavePermissionDeleteComments = async (req, res, next) => {
 
 };
 
-exports.verifyHavePermissionDeleteComments = async (req, res, next) => {
+exports.verifyHavePermissionUpdatePosts = async (req, res, next) => {
 
     try {
 

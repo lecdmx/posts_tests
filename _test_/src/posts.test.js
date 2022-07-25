@@ -284,7 +284,7 @@ exports.validationDeletePostMissinsParams = [
       },
       "status": false
     }
-  } 
+  }
 ];
 
 exports.validationDeletePostOk = [
@@ -306,3 +306,74 @@ exports.validationDeletePostOk = [
 ];
 
 
+
+exports.validationUpdatePostMissinsParams = [
+  {
+    label: 'Validation: Missing post attribute',
+    test: {
+      "id_user_loged": 35
+    },
+    response: {
+      "message": {},
+      "error_message": {
+        "message": {},
+        "error_message": [
+          {
+            "msg": "post is a required parameter",
+            "param": "post",
+            "location": "body"
+          },
+          {
+            "msg": "id_post is a required parameter",
+            "param": "id_post",
+            "location": "body"
+          },
+          {
+            "msg": "id_post must be a number",
+            "param": "id_post",
+            "location": "body"
+          }
+        ],
+        "status": false
+      },
+      "status": false
+    }
+  }
+];
+
+exports.validationUpdatePostOk = [
+  {
+    label: 'Validation: Post updated successfully',
+    test: {
+      "post": "Post updated successfully",
+      "id_post": 42,
+      "id_user_loged": 35
+    },
+    response:
+    {
+      "message": {
+        "updated_id": 42
+      },
+      "error_message": {},
+      "status": true
+    }
+  }
+];
+
+
+exports.validationInvalidPermissionsToUpdatePost = [
+  {
+    label: 'Validation: Invalid permissions to update a post',
+    test: {
+      "post": "Post updated successfully",
+      "id_post": 42,
+      "id_user_loged": 44
+    },
+    response:
+    {
+      "message": {},
+      "error_message": "Invalid permissions",
+      "status": false
+    }
+  }
+];
