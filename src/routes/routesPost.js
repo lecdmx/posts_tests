@@ -12,7 +12,8 @@ router.post('/postsbydate',
         check('start_date').matches(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/).withMessage('start_date must be a date (yyyy-mm-dd)'),
         check('end_date').not().isEmpty().withMessage('end_date is a required parameter'),
         check('end_date').matches(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/).withMessage('end_date must be a date (yyyy-mm-dd)')
-    ], postsController.getPostsByDate);
+    ], 
+    postsController.getPostsByDate);
 
 router.get('/posts/:id', postsController.show);
 
@@ -24,7 +25,7 @@ router.post('/posts',
     ],
     verifyToken, postsController.store);
 
-router.post('/deletepost',
+router.delete('/posts',
     [
         check('id_user_loged').not().isEmpty().withMessage('id_user_loged is a required parameter'),
         check('id_user_loged').isNumeric().withMessage('id_user_loged must be a number'),

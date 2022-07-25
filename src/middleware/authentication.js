@@ -29,7 +29,9 @@ exports.verifyToken = async (req, res, next) => {
     if (!token || !decodedToken.id) {
 
         res.json({
+            "message": {},
             "error_message": "Token missing or invalid",
+            "status": false
         });
 
     } else {
@@ -48,7 +50,11 @@ exports.verifyIsAdmin = async (req, res, next) => {
 
         const errors = validationResult(req);
         if (!errors.isEmpty())
-            throw ({ message: errors.array() });
+            throw ({
+                "message": {},
+                "error_message": errors.array(),
+                "status": false
+            })
 
         const { body } = req;
 

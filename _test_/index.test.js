@@ -6,7 +6,10 @@ const request = require('supertest');
 const { validationGetPostsByDate,
   validationPosts,
   validationGet1Post,
-  validationAddNewPost } = require('./src/posts.test');
+  validationAddNewPostMissingParams,
+  validationDeletePostOk,
+  validationDeletePostMissinsParams,
+  validationAddNewPostOk } = require('./src/posts.test');
 
 const { validationAuthentication,
   validationUsers,
@@ -238,6 +241,8 @@ describe('Test endpoint POSTS /postsbydate', () => {
         .post('/postsbydate')
         .send(validationGetPostsByDate[i].test)
         .expect('Content-Type', /json/)
+        .set('Accept', 'application/json')
+        .expect(200)
         .expect((res) => {
         })
     })
@@ -248,16 +253,84 @@ describe('Test endpoint POSTS /postsbydate', () => {
 
 
 
-describe('Test endpoint POSTS add new post  /posts', () => {
+describe('Test endpoint POSTS add new post missings params /posts', () => {
 
-  for (const i in validationAddNewPost) {
+  for (const i in validationAddNewPostMissingParams) {
 
-    it(validationAddNewPost[i].label, async () => {
+    it(validationAddNewPostMissingParams[i].label, async () => {
       await request(app)
         .post('/posts')
-        .send(validationAddNewPost[i].test)
+        .send(validationAddNewPostMissingParams[i].test)
         .expect('Content-Type', /json/)
+        .set('Accept', 'application/json')
+        .set('Authorization', validToken)
         .expect((res) => {
+          expect(res.body.status).toBe(validationAddNewPostMissingParams[i].response.status)
+        })
+    })
+
+  }
+
+})
+
+
+describe('Test endpoint POSTS add new post  /posts', () => {
+
+  for (const i in validationAddNewPostOk) {
+
+    it(validationAddNewPostOk[i].label, async () => {
+      await request(app)
+        .post('/posts')
+        .send(validationAddNewPostOk[i].test)
+        .expect('Content-Type', /json/)
+        .set('Accept', 'application/json')
+        .set('Authorization', validToken)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.status).toBe(validationAddNewPostOk[i].response.status)
+        })
+    })
+
+  }
+
+})
+
+
+describe('Test endpoint POSTS remove missings params /posts', () => {
+
+  for (const i in validationDeletePostMissinsParams) {
+
+    it(validationDeletePostMissinsParams[i].label, async () => {
+      await request(app)
+        .delete('/posts')
+        .send(validationDeletePostMissinsParams[i].test)
+        .expect('Content-Type', /json/)
+        .set('Accept', 'application/json')
+        .set('Authorization', validToken)
+        .expect((res) => {
+          expect(res.body.status).toBe(validationDeletePostMissinsParams[i].response.status)
+        })
+    })
+
+  }
+
+})
+
+
+describe('Test endpoint delete /posts', () => {
+
+  for (const i in validationDeletePostOk) {
+
+    it(validationDeletePostOk[i].label, async () => {
+      await request(app)
+        .delete('/posts')
+        .send(validationDeletePostOk[i].test)
+        .expect('Content-Type', /json/)
+        .set('Accept', 'application/json')
+        .set('Authorization', validToken)
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.status).toBe(validationDeletePostOk[i].response.status)
         })
     })
 

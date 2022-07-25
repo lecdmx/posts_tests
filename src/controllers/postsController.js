@@ -32,7 +32,7 @@ exports.index = async (req, res) => {
         res.json({
             "message": {},
             "results": [],
-            "error_message": error.message,
+            "error_message": error,
             "status": false
         });
 
@@ -88,7 +88,7 @@ exports.getPostsByDate = async (req, res) => {
         res.json({
             "message": {},
             "results": [],
-            "error_message": error.message,
+            "error_message": error,
             "status": false
         });
     }
@@ -127,8 +127,6 @@ exports.store = async (req, res) => {
                     }
                 }, { transaction: t });
 
-            console.log(JSON.stringify(response));
-
             generatedPostId = response[0][0].id_post;
 
             await db.query(`INSERT INTO challenge.log (id_user, id_post, content)
@@ -155,10 +153,9 @@ exports.store = async (req, res) => {
 
     }
     catch (error) {
-
         res.json({
             "message": {},
-            "error_message": error.message,
+            "error_message": error,
             "status": false
         });
 
@@ -265,7 +262,7 @@ exports.delete = async (req, res) => {
 
         res.json({
             "message": {},
-            "error_message": error.message,
+            "error_message": error,
             "status": false
         });
 
@@ -328,7 +325,7 @@ exports.update = async (req, res) => {
 
         res.json({
             "message": {},
-            "error_message": error.message,
+            "error_message": error,
             "status": false
         });
 

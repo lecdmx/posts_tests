@@ -28,7 +28,7 @@ exports.index = async (req, res) => {
         res.json({
             "message": {},
             "results": [],
-            "error_message": error.message,
+            "error_message": error,
             "status": false
         });
 
@@ -103,7 +103,7 @@ exports.store = async (req, res) => {
 
         res.json({
             "message": {},
-            "error_message": error.message,
+            "error_message": error,
             "status": false
         });
 
@@ -140,7 +140,7 @@ exports.show = async (req, res) => {
         res.json({
             "message": {},
             "results": [],
-            "error_message": error.message,
+            "error_message": error,
             "status": false
         });
 
@@ -189,7 +189,7 @@ exports.update = async (req, res) => {
 
         res.json({
             "message": {},
-            "error_message": error.message,
+            "error_message": error,
             "status": false
         });
 
@@ -250,7 +250,7 @@ exports.delete = async (req, res) => {
 
         res.json({
             "message": {},
-            "error_message": error.message,
+            "error_message": error,
             "status": false
         });
 
@@ -334,7 +334,7 @@ exports.login = async (req, res) => {
 
         res.json({
             "message": {},
-            "error_message": error.message,
+            "error_message": error,
             "status": false
         });
     }

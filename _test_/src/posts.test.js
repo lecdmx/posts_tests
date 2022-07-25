@@ -186,23 +186,123 @@ exports.validationGet1Post = [
   }
 ];
 
-exports.validationAddNewPost = [
+exports.validationAddNewPostMissingParams = [
   {
-    label: 'Validation: Missing id_user attribute',
+    label: 'Validation: Missing post attribute',
     test: {
-      "id_user": "11",
-      "post": "post 13..."
+      "id_user_loged": 36
     },
-    status: false,
-    error_message: "start_date is a required parameter"
+    response: {
+      "message": {},
+      "error_message": {
+        "message": {},
+        "error_message": [
+          {
+            "msg": "post is a required parameter",
+            "param": "post",
+            "location": "body"
+          }
+        ],
+        "status": false
+      },
+      "status": false
+    }
   },
   {
-    label: 'Validation: Missing end_date attribute',
+    label: 'Validation: Missing id_user_loged attribute',
     test: {
-      "start_date": "2022-07-23",
+      "post": "Post ..."
     },
-    status: false,
-    error_message: "end_date is a required parameter"
+    response: {
+      "message": {},
+      "error_message": {
+        "message": {},
+        "error_message": [
+          {
+            "msg": "id_user_loged is a required parameter",
+            "param": "id_user_loged",
+            "location": "body"
+          },
+          {
+            "msg": "id_user_loged must be a number",
+            "param": "id_user_loged",
+            "location": "body"
+          }
+        ],
+        "status": false
+      },
+      "status": false
+    }
   }
 ];
+
+
+exports.validationAddNewPostOk = [
+
+  {
+    label: 'Validation: Add new post successfully',
+    test: {
+      "post": "Post ...",
+      "id_user_loged": 35
+    },
+    response:
+    {
+      "message": {
+        "generated_id": 40
+      },
+      "error_message": {},
+      "status": true
+    }
+  }
+];
+
+
+
+exports.validationDeletePostMissinsParams = [
+  {
+    label: 'Validation: Missing post attribute',
+    test: {
+      "id_user_loged": 35
+    },
+    response: {
+      "message": {},
+      "error_message": {
+        "message": {},
+        "error_message": [
+          {
+            "msg": "id_post is a required parameter",
+            "param": "id_post",
+            "location": "body"
+          },
+          {
+            "msg": "id_post must be a number",
+            "param": "id_post",
+            "location": "body"
+          }
+        ],
+        "status": false
+      },
+      "status": false
+    }
+  } 
+];
+
+exports.validationDeletePostOk = [
+  {
+    label: 'Validation: Post removed successfully',
+    test: {
+      "id_post": 42,
+      "id_user_loged": 36
+    },
+    response:
+    {
+      "message": {
+        "deleted_id": 42
+      },
+      "error_message": {},
+      "status": true
+    }
+  }
+];
+
 
